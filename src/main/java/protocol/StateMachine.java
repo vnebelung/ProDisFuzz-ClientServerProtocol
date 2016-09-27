@@ -1,5 +1,5 @@
 /*
- * This file is part of ProDisFuzz, modified on 9/5/16 12:45 AM.
+ * This file is part of ProDisFuzz, modified on 20.09.16 23:40.
  * Copyright (c) 2013-2016 Volker Nebelung <vnebelung@prodisfuzz.net>
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
@@ -21,7 +21,7 @@ public class StateMachine {
     private Map<StateType, State> states;
 
     /**
-     * Constructs a new state machine which controls the protocol used to connect a monitor server and client.
+     * Constructs a new state machine which controls the protocol used to connect a server and client.
      */
     public StateMachine() {
         states = new EnumMap<>(StateType.class);
@@ -73,11 +73,11 @@ public class StateMachine {
      * @param command the command that is going to be called at caller's side
      * @throws ProtocolStateException if the given command is not allowed to be executed at the current protocol state
      */
-    void updateWith(ClientRequestCommand command) throws ProtocolStateException {
+    public void updateWith(ClientRequestCommand command) throws ProtocolStateException {
         StateType stateType = states.get(currentStateType).getNextStateFor(command);
         if (stateType == null) {
             throw new ProtocolStateException(
-                    "Protocol error: Command '" + command + "' not allowed in state '" + currentStateType + '\'');
+                    "Command '" + command + "' not allowed in state '" + currentStateType + '\'');
         }
         currentStateType = stateType;
     }
@@ -88,7 +88,7 @@ public class StateMachine {
      * @param command the command to check
      * @return true, if the command is allowed at the current state
      */
-    boolean isAllowedAtCurrentState(ClientRequestCommand command) {
+    public boolean isAllowedAtCurrentState(ClientRequestCommand command) {
         return states.get(currentStateType).getNextStateFor(command) != null;
     }
 

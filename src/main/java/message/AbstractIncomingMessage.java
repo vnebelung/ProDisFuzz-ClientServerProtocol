@@ -1,5 +1,5 @@
 /*
- * This file is part of ProDisFuzz, modified on 9/5/16 12:42 AM.
+ * This file is part of ProDisFuzz, modified on 22.09.16 20:46.
  * Copyright (c) 2013-2016 Volker Nebelung <vnebelung@prodisfuzz.net>
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
@@ -11,7 +11,7 @@ package message;
 /**
  * This class represents a message that is received by a client or server.
  */
-public abstract class IncomingMessage<V> {
+public abstract class AbstractIncomingMessage<V> {
 
     private V command;
     private byte[] body;
@@ -22,7 +22,7 @@ public abstract class IncomingMessage<V> {
      * @param command the message's command
      * @param body    the message's body
      */
-    public IncomingMessage(V command, byte... body) {
+    public AbstractIncomingMessage(V command, byte... body) {
         this.command = command;
         this.body = body.clone();
     }
@@ -44,5 +44,6 @@ public abstract class IncomingMessage<V> {
     public byte[] getBody() {
         return body.clone();
     }
+
 
 }

@@ -1,5 +1,5 @@
 /*
- * This file is part of ProDisFuzz, modified on 23.09.16 17:37.
+ * This file is part of ProDisFuzz, modified on 23.09.16 13:29.
  * Copyright (c) 2013-2016 Volker Nebelung <vnebelung@prodisfuzz.net>
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
@@ -9,18 +9,17 @@
 package protocol;
 
 /**
- * Signals that a command has been invoked at an illegal protocol state.
+ * Signals that the counterpart of the client or server has answered with an error message.
  */
-public class ProtocolStateException extends Exception {
+public class ProtocolExecutionException extends Exception {
 
     /**
-     * Constructs an ProtocolStateException with the specified detail message.  A detail message is a String that
+     * Constructs an ProtocolExecutionException with the specified detail message.  A detail message is a String that
      * describes this particular exception.
      *
      * @param string the String that contains a detailed message
      */
-    public ProtocolStateException(String string) {
-        super("Protocol state error: " + string);
+    public ProtocolExecutionException(String string) {
+        super(string);
     }
-
 }

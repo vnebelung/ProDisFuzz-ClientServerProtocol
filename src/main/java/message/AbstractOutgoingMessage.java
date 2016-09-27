@@ -1,5 +1,5 @@
 /*
- * This file is part of ProDisFuzz, modified on 9/5/16 12:42 AM.
+ * This file is part of ProDisFuzz, modified on 14.09.16 21:51.
  * Copyright (c) 2013-2016 Volker Nebelung <vnebelung@prodisfuzz.net>
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
@@ -15,7 +15,7 @@ import java.util.Map.Entry;
 /**
  * This class represents a message that is transmitted from the client to the server or vice versa.
  */
-public abstract class OutgoingMessage<V> {
+public abstract class AbstractOutgoingMessage<V> {
 
     private V command;
     private byte[] body;
@@ -26,7 +26,7 @@ public abstract class OutgoingMessage<V> {
      * @param command the message's command
      * @param body    the message's body
      */
-    public OutgoingMessage(V command, int body) {
+    public AbstractOutgoingMessage(V command, int body) {
         this.command = command;
         this.body = String.valueOf(body).getBytes(StandardCharsets.UTF_8);
     }
@@ -37,7 +37,7 @@ public abstract class OutgoingMessage<V> {
      * @param command the message's command
      * @param body    the message's body
      */
-    public OutgoingMessage(V command, byte... body) {
+    public AbstractOutgoingMessage(V command, byte... body) {
         this.command = command;
         this.body = body;
     }
@@ -48,7 +48,7 @@ public abstract class OutgoingMessage<V> {
      * @param command the message's command
      * @param body    the message's body
      */
-    public OutgoingMessage(V command, String body) {
+    public AbstractOutgoingMessage(V command, String body) {
         this.command = command;
         this.body = body.getBytes(StandardCharsets.UTF_8);
     }
@@ -59,7 +59,7 @@ public abstract class OutgoingMessage<V> {
      *
      * @param command the message's command
      */
-    public OutgoingMessage(V command) {
+    public AbstractOutgoingMessage(V command) {
         this.command = command;
         //noinspection ZeroLengthArrayAllocation
         body = new byte[0];
@@ -71,7 +71,7 @@ public abstract class OutgoingMessage<V> {
      * @param command the message's command
      * @param body    the message's body
      */
-    public OutgoingMessage(V command, Map<String, String> body) {
+    public AbstractOutgoingMessage(V command, Map<String, String> body) {
         this.command = command;
         StringBuilder stringBuilder = new StringBuilder();
         for (Entry<String, String> each : body.entrySet()) {

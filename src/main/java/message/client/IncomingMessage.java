@@ -1,5 +1,5 @@
 /*
- * This file is part of ProDisFuzz, modified on 9/5/16 12:42 AM.
+ * This file is part of ProDisFuzz, modified on 14.09.16 21:51.
  * Copyright (c) 2013-2016 Volker Nebelung <vnebelung@prodisfuzz.net>
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
@@ -8,12 +8,13 @@
 
 package message.client;
 
+import message.AbstractIncomingMessage;
 import protocol.StateMachine;
 
 /**
  * This class represents a message that is received by the client from the server.
  */
-public class IncomingMessage extends message.IncomingMessage<StateMachine.ServerAnswerCommand> {
+public class IncomingMessage extends AbstractIncomingMessage<StateMachine.ServerAnswerCommand> {
 
     /**
      * Constructs a message received by the client from the server.

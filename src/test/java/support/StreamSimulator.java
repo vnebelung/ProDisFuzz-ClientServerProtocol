@@ -1,5 +1,5 @@
 /*
- * This file is part of ProDisFuzz, modified on 9/5/16 12:42 AM.
+ * This file is part of ProDisFuzz, modified on 27.09.16 21:16.
  * Copyright (c) 2013-2016 Volker Nebelung <vnebelung@prodisfuzz.net>
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
@@ -13,28 +13,36 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.Arrays;
 
 public class StreamSimulator {
 
     private Path fileInput;
     private Path fileOutput;
+    private InputStream inputStream;
+    private OutputStream outputStream;
+    private int currentStartPosition = 0;
 
-    public void init() throws IOException {
-        fileInput = Files.createTempFile("a_", null);
-        fileOutput = Files.createTempFile("a_", null);
+    public StreamSimulator() throws IOException {
+        fileInput = Files.createTempFile(null, null);
+        inputStream = new FileInputStream(fileInput.toFile());
+        fileOutput = Files.createTempFile(null, null);
+        outputStream = new FileOutputStream(fileOutput.toFile(), false);
     }
 
     public void exit() throws IOException {
+        inputStream.close();
+        outputStream.close();
         Files.delete(fileInput);
         Files.delete(fileOutput);
     }
 
-    public DataInputStream getDataInputStream() throws FileNotFoundException {
-        return new DataInputStream(new FileInputStream(fileInput.toFile()));
+    public InputStream getInputStream() {
+        return inputStream;
     }
 
-    public DataOutputStream getDataOutputStream() throws FileNotFoundException {
-        return new DataOutputStream(new FileOutputStream(fileOutput.toFile()));
+    public OutputStream getOutputStream() {
+        return outputStream;
     }
 
     public void writeForInputStream(String s) throws IOException {
@@ -42,6 +50,9 @@ public class StreamSimulator {
     }
 
     public byte[] readLastFromOutputStream() throws IOException {
-        return Files.readAllBytes(fileOutput);
+        byte[] content = Files.readAllBytes(fileOutput);
+        byte[] result = Arrays.copyOfRange(content, currentStartPosition, content.length);
+        currentStartPosition = content.length;
+        return result;
     }
 }
