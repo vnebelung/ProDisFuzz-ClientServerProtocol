@@ -1,5 +1,5 @@
 /*
- * This file is part of ProDisFuzz, modified on 27.09.16 22:02.
+ * This file is part of ProDisFuzz, modified on 28.09.16 19:43.
  * Copyright (c) 2013-2016 Volker Nebelung <vnebelung@prodisfuzz.net>
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
@@ -51,6 +51,15 @@ public class AbstractPacketParserTest {
                     Collections.singletonMap("ROK", StateMachine.ServerAnswerCommand.ROK));
             Assert.fail();
         } catch (ProtocolFormatException ignored) {
+        }
+
+        streamSimulator.writeForInputStream("RO");
+        try {
+            packetParser.readIncomingMessage(IncomingMessage.class, StateMachine.ServerAnswerCommand.class,
+                    Collections.singletonMap("ROK", StateMachine.ServerAnswerCommand.ROK));
+            Assert.fail();
+        } catch (ProtocolFormatException e) {
+            Assert.assertEquals(e.getMessage(), "Protocol format error: Received command has not the structure 'CCC '");
         }
     }
 

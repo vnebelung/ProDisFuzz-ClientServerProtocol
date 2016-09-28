@@ -1,6 +1,11 @@
+2016-09-28, Version 3:
+
+- Enhanced packet parsing capabilities,
+- Enhanced Unit Test coverage
+
 2016-09-08, Version 2:
 
-TCP handling included
+- TCP handling included
 
 2016-09-05, Version 1:
 
