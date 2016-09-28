@@ -2,10 +2,11 @@
 
 - Javadoc completed
 - Include source files and Javadoc in build
+- Structure changed
 
 2016-09-28, Version 3:
 
-- Enhanced packet parsing capabilities,
+- Enhanced net.prodisfuzz.csp.packet parsing capabilities,
 - Enhanced Unit Test coverage
 
 2016-09-08, Version 2:

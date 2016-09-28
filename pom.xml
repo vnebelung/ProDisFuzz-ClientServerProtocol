@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><!--
-  ~ This file is part of ProDisFuzz, modified on 28.09.16 22:44.
+  ~ This file is part of ProDisFuzz, modified on 28.09.16 23:35.
   ~ Copyright (c) 2013-2016 Volker Nebelung <vnebelung@prodisfuzz.net>
   ~ This work is free. You can redistribute it and/or modify it under the
   ~ terms of the Do What The Fuck You Want To Public License, Version 2,
@@ -10,7 +10,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.prodisfuzz</groupId>
-    <artifactId>client-server-protocol</artifactId>
+    <artifactId>client-server-net.prodisfuzz.csp.protocol</artifactId>
     <packaging>jar</packaging>
     <version>4</version>
     <name>ProDisFuzz-ClientServerProtocol</name>
