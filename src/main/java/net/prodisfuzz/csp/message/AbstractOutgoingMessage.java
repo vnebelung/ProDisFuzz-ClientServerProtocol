@@ -1,6 +1,6 @@
 /*
- * This file is part of ProDisFuzz, modified on 28.09.16 23:36.
- * Copyright (c) 2013-2016 Volker Nebelung <vnebelung@prodisfuzz.net>
+ * This file is part of ProDisFuzz, modified on 25.06.18 20:11.
+ * Copyright (c) 2013-2018 Volker Nebelung <vnebelung@prodisfuzz.net>
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
  * as published by Sam Hocevar. See the COPYING file for more details.
@@ -26,7 +26,7 @@ public abstract class AbstractOutgoingMessage<V> {
      * @param command the message's command
      * @param body    the message's body
      */
-    public AbstractOutgoingMessage(V command, int body) {
+    AbstractOutgoingMessage(V command, int body) {
         this.command = command;
         this.body = String.valueOf(body).getBytes(StandardCharsets.UTF_8);
     }
@@ -37,7 +37,7 @@ public abstract class AbstractOutgoingMessage<V> {
      * @param command the message's command
      * @param body    the message's body
      */
-    public AbstractOutgoingMessage(V command, byte... body) {
+    protected AbstractOutgoingMessage(V command, byte... body) {
         this.command = command;
         this.body = body;
     }
@@ -48,7 +48,7 @@ public abstract class AbstractOutgoingMessage<V> {
      * @param command the message's command
      * @param body    the message's body
      */
-    public AbstractOutgoingMessage(V command, String body) {
+    protected AbstractOutgoingMessage(V command, String body) {
         this.command = command;
         this.body = body.getBytes(StandardCharsets.UTF_8);
     }
@@ -59,7 +59,7 @@ public abstract class AbstractOutgoingMessage<V> {
      *
      * @param command the message's command
      */
-    public AbstractOutgoingMessage(V command) {
+    protected AbstractOutgoingMessage(V command) {
         this.command = command;
         //noinspection ZeroLengthArrayAllocation
         body = new byte[0];
@@ -71,7 +71,7 @@ public abstract class AbstractOutgoingMessage<V> {
      * @param command the message's command
      * @param body    the message's body
      */
-    public AbstractOutgoingMessage(V command, Map<String, String> body) {
+    protected AbstractOutgoingMessage(V command, Map<String, String> body) {
         this.command = command;
         StringBuilder stringBuilder = new StringBuilder();
         for (Entry<String, String> each : body.entrySet()) {

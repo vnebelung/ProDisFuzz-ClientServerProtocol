@@ -1,6 +1,6 @@
 /*
- * This file is part of ProDisFuzz, modified on 28.09.16 23:36.
- * Copyright (c) 2013-2016 Volker Nebelung <vnebelung@prodisfuzz.net>
+ * This file is part of ProDisFuzz, modified on 25.06.18 20:11.
+ * Copyright (c) 2013-2018 Volker Nebelung <vnebelung@prodisfuzz.net>
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
  * as published by Sam Hocevar. See the COPYING file for more details.
@@ -21,15 +21,15 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-public class ClientTest {
+public class MonitorClientTest {
 
     private StreamSimulator streamSimulator;
-    private Client client;
+    private MonitorClient client;
 
     @BeforeClass
     public void setUp() throws IOException {
         streamSimulator = new StreamSimulator();
-        client = new Client(streamSimulator.getInputStream(), streamSimulator.getOutputStream());
+        client = new MonitorClient(streamSimulator.getInputStream(), streamSimulator.getOutputStream());
     }
 
     @AfterClass

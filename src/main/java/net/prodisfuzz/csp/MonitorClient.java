@@ -1,6 +1,6 @@
 /*
- * This file is part of ProDisFuzz, modified on 28.09.16 23:37.
- * Copyright (c) 2013-2016 Volker Nebelung <vnebelung@prodisfuzz.net>
+ * This file is part of ProDisFuzz, modified on 25.06.18 20:11.
+ * Copyright (c) 2013-2018 Volker Nebelung <vnebelung@prodisfuzz.net>
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
  * as published by Sam Hocevar. See the COPYING file for more details.
@@ -27,7 +27,8 @@ import java.util.stream.Collectors;
  * This class represents the protocol used to communicate from a client to a server. It provides
  * functionality to send and receive messages.
  */
-public class Client {
+@SuppressWarnings("WeakerAccess")
+public class MonitorClient {
 
     private OutputStream outputStream;
     private PacketParser packetParser;
@@ -39,7 +40,7 @@ public class Client {
      * @param inputStream  the client socket's input stream
      * @param outputStream the client socket's output stream
      */
-    public Client(InputStream inputStream, OutputStream outputStream) {
+    public MonitorClient(InputStream inputStream, OutputStream outputStream) {
         this.outputStream = outputStream;
         stateMachine = new StateMachine();
         packetParser = new PacketParser(inputStream);

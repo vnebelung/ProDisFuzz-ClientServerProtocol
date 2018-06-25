@@ -1,6 +1,6 @@
 /*
- * This file is part of ProDisFuzz, modified on 28.09.16 23:36.
- * Copyright (c) 2013-2016 Volker Nebelung <vnebelung@prodisfuzz.net>
+ * This file is part of ProDisFuzz, modified on 25.06.18 20:11.
+ * Copyright (c) 2013-2018 Volker Nebelung <vnebelung@prodisfuzz.net>
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
  * as published by Sam Hocevar. See the COPYING file for more details.
@@ -18,7 +18,7 @@ import java.util.Map;
 
 public class AbstractOutgoingMessageTest {
     @Test
-    public void testGetBytes() throws Exception {
+    public void testGetBytes() {
         AbstractOutgoingMessageTest.OutgoingServerMessage outgoingServerMessage =
                 new AbstractOutgoingMessageTest.OutgoingServerMessage(StateMachine.ServerAnswerCommand.ROK, 123456);
         Assert.assertEquals(outgoingServerMessage.getBytes(), "ROK 6 123456".getBytes(StandardCharsets.UTF_8));
@@ -52,7 +52,7 @@ public class AbstractOutgoingMessageTest {
     }
 
     @Test
-    public void testGetCommand() throws Exception {
+    public void testGetCommand() {
         for (StateMachine.ServerAnswerCommand each : StateMachine.ServerAnswerCommand.values()) {
             AbstractOutgoingMessageTest.OutgoingServerMessage outgoingServerMessage =
                     new AbstractOutgoingMessageTest.OutgoingServerMessage(each);

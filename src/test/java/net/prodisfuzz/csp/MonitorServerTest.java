@@ -1,6 +1,6 @@
 /*
- * This file is part of ProDisFuzz, modified on 28.09.16 23:36.
- * Copyright (c) 2013-2016 Volker Nebelung <vnebelung@prodisfuzz.net>
+ * This file is part of ProDisFuzz, modified on 25.06.18 20:11.
+ * Copyright (c) 2013-2018 Volker Nebelung <vnebelung@prodisfuzz.net>
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
  * as published by Sam Hocevar. See the COPYING file for more details.
@@ -22,7 +22,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ServerTest {
+public class MonitorServerTest {
 
     private StreamSimulator streamSimulator;
 
@@ -38,7 +38,7 @@ public class ServerTest {
 
     @Test
     public void testReceive1() throws IOException {
-        Server server = new Server(streamSimulator.getInputStream(), streamSimulator.getOutputStream());
+        MonitorServer server = new MonitorServer(streamSimulator.getInputStream(), streamSimulator.getOutputStream());
         streamSimulator.writeForInputStream("RSTT 0 ");
         Assert.assertNull(server.receive());
         Assert.assertEquals(streamSimulator.readLastFromOutputStream(),
@@ -48,7 +48,7 @@ public class ServerTest {
 
     @Test
     public void testReceive2() throws IOException {
-        Server server = new Server(streamSimulator.getInputStream(), streamSimulator.getOutputStream());
+        MonitorServer server = new MonitorServer(streamSimulator.getInputStream(), streamSimulator.getOutputStream());
         streamSimulator.writeForInputStream("RST 0 ");
         Assert.assertNull(server.receive());
         Assert.assertEquals(streamSimulator.readLastFromOutputStream(),
@@ -58,7 +58,7 @@ public class ServerTest {
 
     @Test
     public void testReceive3() throws IOException {
-        Server server = new Server(streamSimulator.getInputStream(), streamSimulator.getOutputStream());
+        MonitorServer server = new MonitorServer(streamSimulator.getInputStream(), streamSimulator.getOutputStream());
         streamSimulator.writeForInputStream("AYT 0 ");
         net.prodisfuzz.csp.message.server.IncomingMessage incomingMessage = server.receive();
         Assert.assertEquals(incomingMessage.getCommand(), StateMachine.ClientRequestCommand.AYT);
@@ -67,7 +67,7 @@ public class ServerTest {
 
     @Test
     public void testRok1_1() throws Exception {
-        Server server = new Server(streamSimulator.getInputStream(), streamSimulator.getOutputStream());
+        MonitorServer server = new MonitorServer(streamSimulator.getInputStream(), streamSimulator.getOutputStream());
         try {
             server.rok(Collections.emptyMap());
             Assert.fail();
@@ -77,7 +77,7 @@ public class ServerTest {
 
     @Test
     public void testRok1_2() throws Exception {
-        Server server = new Server(streamSimulator.getInputStream(), streamSimulator.getOutputStream());
+        MonitorServer server = new MonitorServer(streamSimulator.getInputStream(), streamSimulator.getOutputStream());
         streamSimulator.writeForInputStream("AYT 0 ");
         server.receive();
         server.rok(Collections.emptyMap());
@@ -86,7 +86,7 @@ public class ServerTest {
 
     @Test
     public void testRok2_1() throws Exception {
-        Server server = new Server(streamSimulator.getInputStream(), streamSimulator.getOutputStream());
+        MonitorServer server = new MonitorServer(streamSimulator.getInputStream(), streamSimulator.getOutputStream());
         try {
             server.rok(Collections.singletonMap("key1", "value1"));
             Assert.fail();
@@ -96,7 +96,7 @@ public class ServerTest {
 
     @Test
     public void testRok2_2() throws Exception {
-        Server server = new Server(streamSimulator.getInputStream(), streamSimulator.getOutputStream());
+        MonitorServer server = new MonitorServer(streamSimulator.getInputStream(), streamSimulator.getOutputStream());
         streamSimulator.writeForInputStream("AYT 0 ");
         Map<String, String> map = new HashMap<>(3);
         map.put("key1", "value1");
@@ -110,7 +110,7 @@ public class ServerTest {
 
     @Test
     public void testErr() throws Exception {
-        Server server = new Server(streamSimulator.getInputStream(), streamSimulator.getOutputStream());
+        MonitorServer server = new MonitorServer(streamSimulator.getInputStream(), streamSimulator.getOutputStream());
         server.err("cause1");
         Assert.assertEquals(streamSimulator.readLastFromOutputStream(),
                 "ERR 6 cause1".getBytes(StandardCharsets.UTF_8));

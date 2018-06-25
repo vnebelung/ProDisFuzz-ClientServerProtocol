@@ -1,6 +1,6 @@
 /*
- * This file is part of ProDisFuzz, modified on 28.09.16 23:36.
- * Copyright (c) 2013-2016 Volker Nebelung <vnebelung@prodisfuzz.net>
+ * This file is part of ProDisFuzz, modified on 25.06.18 20:11.
+ * Copyright (c) 2013-2018 Volker Nebelung <vnebelung@prodisfuzz.net>
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
  * as published by Sam Hocevar. See the COPYING file for more details.
@@ -17,7 +17,7 @@ public class StateTest {
     private State state;
 
     @BeforeMethod
-    public void setUp() throws Exception {
+    public void setUp() {
         state = new State();
         state.addTransition(StateMachine.ClientRequestCommand.RST, StateMachine.StateType.NEW);
         state.addTransition(StateMachine.ClientRequestCommand.CTF, StateMachine.StateType.CONNECTOR_READY);
@@ -38,7 +38,7 @@ public class StateTest {
 
     @SuppressWarnings("EmptyMethod")
     @Test
-    public void testAddTransition() throws Exception {
+    public void testAddTransition() {
         // See setUp() / testGetNextStateFor()
     }
 
