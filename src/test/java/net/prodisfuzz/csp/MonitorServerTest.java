@@ -1,5 +1,5 @@
 /*
- * This file is part of ProDisFuzz, modified on 25.06.18 20:11.
+ * This file is part of ProDisFuzz, modified on 06.07.18 15:01.
  * Copyright (c) 2013-2018 Volker Nebelung <vnebelung@prodisfuzz.net>
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
@@ -38,7 +38,7 @@ public class MonitorServerTest {
 
     @Test
     public void testReceive1() throws IOException {
-        MonitorServer server = new MonitorServer(streamSimulator.getInputStream(), streamSimulator.getOutputStream());
+        ServerProtocol server = new ServerProtocol(streamSimulator.getInputStream(), streamSimulator.getOutputStream());
         streamSimulator.writeForInputStream("RSTT 0 ");
         Assert.assertNull(server.receive());
         Assert.assertEquals(streamSimulator.readLastFromOutputStream(),
@@ -48,7 +48,7 @@ public class MonitorServerTest {
 
     @Test
     public void testReceive2() throws IOException {
-        MonitorServer server = new MonitorServer(streamSimulator.getInputStream(), streamSimulator.getOutputStream());
+        ServerProtocol server = new ServerProtocol(streamSimulator.getInputStream(), streamSimulator.getOutputStream());
         streamSimulator.writeForInputStream("RST 0 ");
         Assert.assertNull(server.receive());
         Assert.assertEquals(streamSimulator.readLastFromOutputStream(),
@@ -58,7 +58,7 @@ public class MonitorServerTest {
 
     @Test
     public void testReceive3() throws IOException {
-        MonitorServer server = new MonitorServer(streamSimulator.getInputStream(), streamSimulator.getOutputStream());
+        ServerProtocol server = new ServerProtocol(streamSimulator.getInputStream(), streamSimulator.getOutputStream());
         streamSimulator.writeForInputStream("AYT 0 ");
         net.prodisfuzz.csp.message.server.IncomingMessage incomingMessage = server.receive();
         Assert.assertEquals(incomingMessage.getCommand(), StateMachine.ClientRequestCommand.AYT);
@@ -67,7 +67,7 @@ public class MonitorServerTest {
 
     @Test
     public void testRok1_1() throws Exception {
-        MonitorServer server = new MonitorServer(streamSimulator.getInputStream(), streamSimulator.getOutputStream());
+        ServerProtocol server = new ServerProtocol(streamSimulator.getInputStream(), streamSimulator.getOutputStream());
         try {
             server.rok(Collections.emptyMap());
             Assert.fail();
@@ -77,7 +77,7 @@ public class MonitorServerTest {
 
     @Test
     public void testRok1_2() throws Exception {
-        MonitorServer server = new MonitorServer(streamSimulator.getInputStream(), streamSimulator.getOutputStream());
+        ServerProtocol server = new ServerProtocol(streamSimulator.getInputStream(), streamSimulator.getOutputStream());
         streamSimulator.writeForInputStream("AYT 0 ");
         server.receive();
         server.rok(Collections.emptyMap());
@@ -86,7 +86,7 @@ public class MonitorServerTest {
 
     @Test
     public void testRok2_1() throws Exception {
-        MonitorServer server = new MonitorServer(streamSimulator.getInputStream(), streamSimulator.getOutputStream());
+        ServerProtocol server = new ServerProtocol(streamSimulator.getInputStream(), streamSimulator.getOutputStream());
         try {
             server.rok(Collections.singletonMap("key1", "value1"));
             Assert.fail();
@@ -96,7 +96,7 @@ public class MonitorServerTest {
 
     @Test
     public void testRok2_2() throws Exception {
-        MonitorServer server = new MonitorServer(streamSimulator.getInputStream(), streamSimulator.getOutputStream());
+        ServerProtocol server = new ServerProtocol(streamSimulator.getInputStream(), streamSimulator.getOutputStream());
         streamSimulator.writeForInputStream("AYT 0 ");
         Map<String, String> map = new HashMap<>(3);
         map.put("key1", "value1");
@@ -110,7 +110,7 @@ public class MonitorServerTest {
 
     @Test
     public void testErr() throws Exception {
-        MonitorServer server = new MonitorServer(streamSimulator.getInputStream(), streamSimulator.getOutputStream());
+        ServerProtocol server = new ServerProtocol(streamSimulator.getInputStream(), streamSimulator.getOutputStream());
         server.err("cause1");
         Assert.assertEquals(streamSimulator.readLastFromOutputStream(),
                 "ERR 6 cause1".getBytes(StandardCharsets.UTF_8));

@@ -1,5 +1,5 @@
 /*
- * This file is part of ProDisFuzz, modified on 25.06.18 20:11.
+ * This file is part of ProDisFuzz, modified on 06.07.18 15:01.
  * Copyright (c) 2013-2018 Volker Nebelung <vnebelung@prodisfuzz.net>
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
  * functionality to send and receive messages.
  */
 @SuppressWarnings("WeakerAccess")
-public class MonitorClient {
+public class ClientProtocol {
 
     private OutputStream outputStream;
     private PacketParser packetParser;
@@ -40,7 +40,7 @@ public class MonitorClient {
      * @param inputStream  the client socket's input stream
      * @param outputStream the client socket's output stream
      */
-    public MonitorClient(InputStream inputStream, OutputStream outputStream) {
+    public ClientProtocol(InputStream inputStream, OutputStream outputStream) {
         this.outputStream = outputStream;
         stateMachine = new StateMachine();
         packetParser = new PacketParser(inputStream);

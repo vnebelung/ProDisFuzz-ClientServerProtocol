@@ -1,5 +1,5 @@
 /*
- * This file is part of ProDisFuzz, modified on 25.06.18 20:11.
+ * This file is part of ProDisFuzz, modified on 06.07.18 15:01.
  * Copyright (c) 2013-2018 Volker Nebelung <vnebelung@prodisfuzz.net>
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
@@ -24,12 +24,12 @@ import java.util.*;
 public class MonitorClientTest {
 
     private StreamSimulator streamSimulator;
-    private MonitorClient client;
+    private ClientProtocol client;
 
     @BeforeClass
     public void setUp() throws IOException {
         streamSimulator = new StreamSimulator();
-        client = new MonitorClient(streamSimulator.getInputStream(), streamSimulator.getOutputStream());
+        client = new ClientProtocol(streamSimulator.getInputStream(), streamSimulator.getOutputStream());
     }
 
     @AfterClass
