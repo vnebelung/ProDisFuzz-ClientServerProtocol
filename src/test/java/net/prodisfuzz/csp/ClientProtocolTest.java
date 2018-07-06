@@ -1,5 +1,5 @@
 /*
- * This file is part of ProDisFuzz, modified on 06.07.18 15:01.
+ * This file is part of ProDisFuzz, modified on 06.07.18 15:30.
  * Copyright (c) 2013-2018 Volker Nebelung <vnebelung@prodisfuzz.net>
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-public class MonitorClientTest {
+public class ClientProtocolTest {
 
     private StreamSimulator streamSimulator;
     private ClientProtocol client;
