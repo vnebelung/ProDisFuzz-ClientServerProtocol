@@ -1,5 +1,5 @@
 /*
- * This file is part of ProDisFuzz, modified on 06.07.18 15:01.
+ * This file is part of ProDisFuzz, modified on 15.07.18 21:57.
  * Copyright (c) 2013-2018 Volker Nebelung <vnebelung@prodisfuzz.net>
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
@@ -8,13 +8,13 @@
 
 package net.prodisfuzz.csp;
 
-import net.prodisfuzz.csp.message.client.IncomingMessage;
-import net.prodisfuzz.csp.message.client.OutgoingMessage;
-import net.prodisfuzz.csp.packet.ProtocolFormatException;
-import net.prodisfuzz.csp.packet.client.PacketParser;
-import net.prodisfuzz.csp.protocol.ProtocolExecutionException;
-import net.prodisfuzz.csp.protocol.ProtocolStateException;
-import net.prodisfuzz.csp.protocol.StateMachine;
+import net.prodisfuzz.csp.internal.message.client.IncomingMessage;
+import net.prodisfuzz.csp.internal.message.client.OutgoingMessage;
+import net.prodisfuzz.csp.internal.packet.ProtocolFormatException;
+import net.prodisfuzz.csp.internal.packet.client.PacketParser;
+import net.prodisfuzz.csp.internal.protocol.ProtocolStateException;
+import net.prodisfuzz.csp.internal.protocol.StateMachine;
+import net.prodisfuzz.csp.internal.util.Hex;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,8 +24,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * This class represents the protocol used to communicate from a client to a server. It provides
- * functionality to send and receive messages.
+ * This class represents the protocol used to communicate from a client to a server. It provides functionality to send
+ * and receive messages.
  */
 @SuppressWarnings("WeakerAccess")
 public class ClientProtocol {
@@ -74,10 +74,11 @@ public class ClientProtocol {
     }
 
     /**
-     * Sends an "are you there" message that checks whether the server is reachable. When the server is
-     * receiving this message, it must respond with its version number.
+     * Sends an "are you there" message that checks whether the server is reachable. When the server is receiving this
+     * message, it must respond with its version number.
      *
-     * @return the version parameter sent back from the server
+     * @return the version sent back from the server with the map key "version" or an empty map if the server's response
+     * does not contain a version
      * @throws IOException                if an I/O error occurs
      * @throws ProtocolStateException     if the command is not allowed at the current protocol state
      * @throws ProtocolFormatException    if the received package is not of the format "CCC L… B…", CCC = three
@@ -88,10 +89,12 @@ public class ClientProtocol {
             ProtocolExecutionException {
         OutgoingMessage outgoingMessage = new OutgoingMessage(StateMachine.ClientRequestCommand.AYT);
         byte[] body = sendReceive(outgoingMessage);
+
         Map<String, String> parameters = parseBody(body);
         if (!parameters.containsKey("version")) {
             return Collections.emptyMap();
         }
+
         return Collections.singletonMap("version", parameters.get("version"));
     }
 
@@ -116,7 +119,8 @@ public class ClientProtocol {
      * Sends a "get connectors" message that receives all connectors the server has to offer. When the server is
      * receiving this message, it must respond with a list of connector types.
      *
-     * @return the connectors the server has available
+     * @return the connectors the server has available. The connectors are listed with map keys "connector0",
+     * "connector1", and so on. Returns an empty map if the server's response does not contain such keys.
      * @throws IOException                if an I/O error occurs
      * @throws ProtocolStateException     if the command is not allowed at the current protocol state
      * @throws ProtocolFormatException    if the received package is not of the format "CCC L… B…", CCC = three
@@ -163,24 +167,27 @@ public class ClientProtocol {
      */
     public void sco(String connector) throws IOException, ProtocolStateException, ProtocolFormatException,
             ProtocolExecutionException {
-        OutgoingMessage outgoingMessage = new OutgoingMessage(StateMachine.ClientRequestCommand.SCO, connector);
+        OutgoingMessage outgoingMessage =
+                new OutgoingMessage(StateMachine.ClientRequestCommand.SCO, "connector=" + connector);
         sendReceive(outgoingMessage);
     }
 
     /**
-     * Sends a "call target for testing" message that tells the server to call the target without any data to verify
-     * that calling the target can be done successfully.
+     * Sends a "call target for testing" message that tells the server to call the target with the given valid data to
+     * verify that calling the target can be done successfully.
      *
-     * @return the parameters sent back from the server
+     * @param data the fuzzed data
+     * @return the parameters sent back from the server in a key-value format
      * @throws IOException                if an I/O error occurs
      * @throws ProtocolFormatException    if the received package is not of the format "CCC L… B…", CCC = three
      *                                    character command, L… = length of body, B… = body with length L…
      * @throws ProtocolStateException     if the command is not allowed at the current protocol state
      * @throws ProtocolExecutionException if the server answered with an error message
      */
-    public Map<String, String> ctt() throws IOException, ProtocolStateException, ProtocolFormatException,
+    public Map<String, String> ctt(byte... data) throws IOException, ProtocolStateException, ProtocolFormatException,
             ProtocolExecutionException {
-        OutgoingMessage outgoingMessage = new OutgoingMessage(StateMachine.ClientRequestCommand.CTT);
+        OutgoingMessage outgoingMessage =
+                new OutgoingMessage(StateMachine.ClientRequestCommand.CTT, "data=" + Hex.byte2HexBin(data));
         byte[] body = sendReceive(outgoingMessage);
         return parseBody(body);
     }
@@ -197,7 +204,8 @@ public class ClientProtocol {
      */
     public void swa(String watcher) throws IOException, ProtocolStateException, ProtocolFormatException,
             ProtocolExecutionException {
-        OutgoingMessage outgoingMessage = new OutgoingMessage(StateMachine.ClientRequestCommand.SWA, watcher);
+        OutgoingMessage outgoingMessage =
+                new OutgoingMessage(StateMachine.ClientRequestCommand.SWA, "watcher=" + watcher);
         sendReceive(outgoingMessage);
     }
 
@@ -205,7 +213,9 @@ public class ClientProtocol {
      * Sends a "get watchers" message that receives all watchers the server has to offer. When the server is receiving
      * this message, it must respond with a list of watcher types.
      *
-     * @return the watchers the server has available for its previously set connector
+     * @return the watchers the server has available for its previously set connector. The connectors are listed with
+     * map keys "watcher0", "watcher1", and so on. Returns an empty map if the server's response does not contain such
+     * keys.
      * @throws IOException                if an I/O error occurs
      * @throws ProtocolFormatException    if the received package is not of the format "CCC L… B…", CCC = three
      *                                    character command, L… = length of body, B… = body with length L…
@@ -224,8 +234,8 @@ public class ClientProtocol {
     }
 
     /**
-     * Sends a "call target with fuzz data" message that tells the server to call the target with the given fuzzed
-     * data. The server responds whether the target has crashed when executing the data.
+     * Sends a "call target with fuzz data" message that tells the server to call the target with the given fuzzed data.
+     * The server responds whether the target has crashed when executing the data.
      *
      * @param data the fuzzed data
      * @return the parameters sent back from the server
@@ -237,7 +247,8 @@ public class ClientProtocol {
      */
     public Map<String, String> ctf(byte... data) throws IOException, ProtocolStateException, ProtocolFormatException,
             ProtocolExecutionException {
-        OutgoingMessage outgoingMessage = new OutgoingMessage(StateMachine.ClientRequestCommand.CTF, data);
+        OutgoingMessage outgoingMessage =
+                new OutgoingMessage(StateMachine.ClientRequestCommand.CTF, "data=" + Hex.byte2HexBin(data));
         byte[] body = sendReceive(outgoingMessage);
         return parseBody(body);
     }
@@ -255,5 +266,4 @@ public class ClientProtocol {
         OutgoingMessage outgoingMessage = new OutgoingMessage(StateMachine.ClientRequestCommand.RST);
         sendReceive(outgoingMessage);
     }
-
 }

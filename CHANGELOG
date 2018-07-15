@@ -1,3 +1,9 @@
+2018-07-15, Version 7:
+
+- Weaken the regex for generic packet parsing
+- Improved javadoc comments
+- Moved internal classes in package internal
+
 2018-07-06, Version 6:
 
 - Renamed main classes

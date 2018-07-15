@@ -1,5 +1,5 @@
 /*
- * This file is part of ProDisFuzz, modified on 06.07.18 15:30.
+ * This file is part of ProDisFuzz, modified on 15.07.18 21:57.
  * Copyright (c) 2013-2018 Volker Nebelung <vnebelung@prodisfuzz.net>
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
@@ -8,9 +8,8 @@
 
 package net.prodisfuzz.csp;
 
-import net.prodisfuzz.csp.packet.ProtocolFormatException;
-import net.prodisfuzz.csp.protocol.ProtocolExecutionException;
-import net.prodisfuzz.csp.protocol.ProtocolStateException;
+import net.prodisfuzz.csp.internal.packet.ProtocolFormatException;
+import net.prodisfuzz.csp.internal.protocol.ProtocolStateException;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
