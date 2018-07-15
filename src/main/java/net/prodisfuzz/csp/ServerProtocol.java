@@ -1,5 +1,5 @@
 /*
- * This file is part of ProDisFuzz, modified on 15.07.18 21:57.
+ * This file is part of ProDisFuzz, modified on 15.07.18 22:25.
  * Copyright (c) 2013-2018 Volker Nebelung <vnebelung@prodisfuzz.net>
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
@@ -51,6 +51,15 @@ public class ServerProtocol {
     /**
      * Constructs a new server behavior component responsible for communicating with the client component.
      *
+     * @param aytListener  the listener that is responsible for implementing the AYT command
+     * @param gcoListener  the listener that is responsible for implementing the GCO command
+     * @param scoListener  the listener that is responsible for implementing the SCO command
+     * @param scpListener  the listener that is responsible for implementing the SCP command
+     * @param cttListener  the listener that is responsible for implementing the CTT command
+     * @param gwaListener  the listener that is responsible for implementing the GWA command
+     * @param swaListener  the listener that is responsible for implementing the SWA command
+     * @param ctfListener  the listener that is responsible for implementing the CTF command
+     * @param rstListener  the listener that is responsible for implementing the RST command
      * @param inputStream  the server socket's input stream
      * @param outputStream the server socket's output stream
      */
