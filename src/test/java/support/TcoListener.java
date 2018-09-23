@@ -1,5 +1,5 @@
 /*
- * This file is part of ProDisFuzz, modified on 15.07.18 21:09.
+ * This file is part of ProDisFuzz, modified on 23.09.18 10:10.
  * Copyright (c) 2013-2018 Volker Nebelung <vnebelung@prodisfuzz.net>
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
@@ -8,19 +8,19 @@
 
 package support;
 
-import net.prodisfuzz.csp.ICtfListener;
+import net.prodisfuzz.csp.ITcoListener;
 import net.prodisfuzz.csp.ProtocolExecutionException;
 
 import java.util.Map;
 
-public class CtfListener implements ICtfListener {
+public class TcoListener implements ITcoListener {
 
     private boolean triggered = false;
     private Map<String, String> outValue;
     private String exception = "";
     private byte[] inValue;
 
-    public CtfListener(Map<String, String> outValue) {
+    public TcoListener(Map<String, String> outValue) {
         this.outValue = outValue;
     }
 
@@ -30,8 +30,8 @@ public class CtfListener implements ICtfListener {
 
     @Override
     public Map<String, String> receive(byte... data) throws ProtocolExecutionException {
-        triggered = true;
         inValue = data;
+        triggered = true;
         if (!exception.isEmpty()) {
             throw new ProtocolExecutionException(exception);
         }

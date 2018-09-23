@@ -1,5 +1,5 @@
 /*
- * This file is part of ProDisFuzz, modified on 15.07.18 22:25.
+ * This file is part of ProDisFuzz, modified on 22.09.18 01:18.
  * Copyright (c) 2013-2018 Volker Nebelung <vnebelung@prodisfuzz.net>
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
@@ -42,10 +42,12 @@ public class ServerProtocol {
     private IGcoListener gcoListener;
     private IScoListener scoListener;
     private IScpListener scpListener;
-    private ICttListener cttListener;
+    private ITcoListener tcoListener;
+    private ITwaListener twaListener;
     private IGwaListener gwaListener;
     private ISwaListener swaListener;
-    private ICtfListener ctfListener;
+    private ISwpListener swpListener;
+    private IFuzListener fuzListener;
     private IRstListener rstListener;
 
     /**
@@ -55,27 +57,32 @@ public class ServerProtocol {
      * @param gcoListener  the listener that is responsible for implementing the GCO command
      * @param scoListener  the listener that is responsible for implementing the SCO command
      * @param scpListener  the listener that is responsible for implementing the SCP command
-     * @param cttListener  the listener that is responsible for implementing the CTT command
+     * @param tcoListener  the listener that is responsible for implementing the TCO command
      * @param gwaListener  the listener that is responsible for implementing the GWA command
      * @param swaListener  the listener that is responsible for implementing the SWA command
-     * @param ctfListener  the listener that is responsible for implementing the CTF command
+     * @param swpListener  the listener that is responsible for implementing the SWP command
+     * @param twaListener  the listener that is responsible for implementing the TWA command
+     * @param fuzListener  the listener that is responsible for implementing the FUZ command
      * @param rstListener  the listener that is responsible for implementing the RST command
      * @param inputStream  the server socket's input stream
      * @param outputStream the server socket's output stream
      */
     public ServerProtocol(InputStream inputStream, OutputStream outputStream, IAytListener aytListener,
                           IGcoListener gcoListener, IScoListener scoListener, IScpListener scpListener,
-                          ICttListener cttListener, IGwaListener gwaListener, ISwaListener swaListener,
-                          ICtfListener ctfListener, IRstListener rstListener) {
+                          ITcoListener tcoListener, IGwaListener gwaListener, ISwaListener swaListener,
+                          ISwpListener swpListener, ITwaListener twaListener, IFuzListener fuzListener,
+                          IRstListener rstListener) {
         this.outputStream = outputStream;
         this.aytListener = aytListener;
         this.gcoListener = gcoListener;
         this.scoListener = scoListener;
         this.scpListener = scpListener;
-        this.cttListener = cttListener;
+        this.tcoListener = tcoListener;
         this.gwaListener = gwaListener;
         this.swaListener = swaListener;
-        this.ctfListener = ctfListener;
+        this.swpListener = swpListener;
+        this.twaListener = twaListener;
+        this.fuzListener = fuzListener;
         this.rstListener = rstListener;
         stateMachine = new StateMachine();
         packetParser = new PacketParser(inputStream);
@@ -151,10 +158,10 @@ public class ServerProtocol {
                     scpListener.receive(parseBody(incomingMessage.getBody()));
                     rok();
                     break;
-                case CTT:
-                    Map<String, String> cttResults =
-                            cttListener.receive(Hex.hexBin2Byte(body.getOrDefault("data", "")));
-                    rok(cttResults);
+                case TCO:
+                    Map<String, String> tcoResults =
+                            tcoListener.receive(Hex.hexBin2Byte(body.getOrDefault("data", "")));
+                    rok(tcoResults);
                     break;
                 case GWA:
                     Set<String> watchers = gwaListener.receive();
@@ -170,10 +177,19 @@ public class ServerProtocol {
                     swaListener.receive(body.getOrDefault("watcher", ""));
                     rok();
                     break;
-                case CTF:
-                    Map<String, String> fuzzingResults =
-                            ctfListener.receive(Hex.hexBin2Byte(body.getOrDefault("data", "")));
-                    rok(fuzzingResults);
+                case SWP:
+                    swpListener.receive(parseBody(incomingMessage.getBody()));
+                    rok();
+                    break;
+                case TWA:
+                    Map<String, String> twaResults =
+                            twaListener.receive(Hex.hexBin2Byte(body.getOrDefault("data", "")));
+                    rok(twaResults);
+                    break;
+                case FUZ:
+                    Map<String, String> fuzResults =
+                            fuzListener.receive(Hex.hexBin2Byte(body.getOrDefault("data", "")));
+                    rok(fuzResults);
                     break;
             }
         } catch (ProtocolExecutionException e) {

@@ -1,5 +1,5 @@
 /*
- * This file is part of ProDisFuzz, modified on 15.07.18 21:57.
+ * This file is part of ProDisFuzz, modified on 23.09.18 09:11.
  * Copyright (c) 2013-2018 Volker Nebelung <vnebelung@prodisfuzz.net>
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
@@ -64,9 +64,9 @@ public class ClientProtocolTest {
     }
 
     @Test(priority = 1)
-    public void testCtt1() throws IOException, ProtocolExecutionException {
+    public void testTco1() throws IOException, ProtocolExecutionException {
         try {
-            client.ctt();
+            client.tco();
             Assert.fail();
         } catch (ProtocolFormatException | ProtocolStateException ignored) {
         }
@@ -91,9 +91,27 @@ public class ClientProtocolTest {
     }
 
     @Test(priority = 1)
-    public void testCtf1() throws IOException, ProtocolExecutionException {
+    public void testSwp1() throws IOException, ProtocolExecutionException {
         try {
-            client.ctf();
+            client.swp(Collections.emptyMap());
+            Assert.fail();
+        } catch (ProtocolFormatException | ProtocolStateException ignored) {
+        }
+    }
+
+    @Test(priority = 1)
+    public void testTwa1() throws IOException, ProtocolExecutionException {
+        try {
+            client.twa();
+            Assert.fail();
+        } catch (ProtocolFormatException | ProtocolStateException ignored) {
+        }
+    }
+
+    @Test(priority = 1)
+    public void testFuz1() throws IOException, ProtocolExecutionException {
+        try {
+            client.fuz();
             Assert.fail();
         } catch (ProtocolFormatException | ProtocolStateException ignored) {
         }
@@ -207,20 +225,20 @@ public class ClientProtocolTest {
     }
 
     @Test(priority = 7)
-    public void testCtt2() throws IOException, ProtocolStateException, ProtocolFormatException,
+    public void testTco2() throws IOException, ProtocolStateException, ProtocolFormatException,
             ProtocolExecutionException {
         streamSimulator.writeForInputStream("ERR 4 test");
         try {
-            client.ctt();
+            client.tco();
             Assert.fail();
         } catch (ProtocolExecutionException e) {
             Assert.assertEquals(e.getMessage(), "test");
         }
-        Assert.assertEquals(streamSimulator.readLastFromOutputStream(), "CTT 0 ".getBytes(StandardCharsets.UTF_8));
+        Assert.assertEquals(streamSimulator.readLastFromOutputStream(), "TCO 0 ".getBytes(StandardCharsets.UTF_8));
 
         streamSimulator.writeForInputStream("ROK 17 testkey=testvalue");
-        Map<String, String> received = client.ctt();
-        Assert.assertEquals(streamSimulator.readLastFromOutputStream(), "CTT 0 ".getBytes(StandardCharsets.UTF_8));
+        Map<String, String> received = client.tco();
+        Assert.assertEquals(streamSimulator.readLastFromOutputStream(), "TCO 0 ".getBytes(StandardCharsets.UTF_8));
         Assert.assertEquals(received, Collections.singletonMap("testkey", "testvalue"));
     }
 
@@ -265,27 +283,68 @@ public class ClientProtocolTest {
     }
 
     @Test(priority = 10)
-    public void testCtf2() throws IOException, ProtocolStateException, ProtocolFormatException,
+    public void testSwp2() throws IOException, ProtocolStateException, ProtocolFormatException,
             ProtocolExecutionException {
         streamSimulator.writeForInputStream("ERR 4 test");
+        Map<String, String> map = new HashMap<>(3);
+        map.put("key1", "value1");
+        map.put("key2", "value2");
+        map.put("key3", "value3");
         try {
-            client.ctf("test".getBytes(StandardCharsets.UTF_8));
+            client.swp(map);
             Assert.fail();
         } catch (ProtocolExecutionException e) {
             Assert.assertEquals(e.getMessage(), "test");
         }
-        Assert.assertEquals(streamSimulator.readLastFromOutputStream(), "CTF 4 test".getBytes(StandardCharsets.UTF_8));
+        Assert.assertEquals(streamSimulator.readLastFromOutputStream(),
+                "SWP 35 key1=value1,key2=value2,key3=value3".getBytes(StandardCharsets.UTF_8));
+
+        streamSimulator.writeForInputStream("ROK 17 testkey=testvalue");
+        client.swp(map);
+        Assert.assertEquals(streamSimulator.readLastFromOutputStream(),
+                "SWP 35 key1=value1,key2=value2,key3=value3".getBytes(StandardCharsets.UTF_8));
+    }
+
+    @Test(priority = 11)
+    public void testTwa2() throws IOException, ProtocolStateException, ProtocolFormatException,
+            ProtocolExecutionException {
+        streamSimulator.writeForInputStream("ERR 4 test");
+        try {
+            client.twa();
+            Assert.fail();
+        } catch (ProtocolExecutionException e) {
+            Assert.assertEquals(e.getMessage(), "test");
+        }
+        Assert.assertEquals(streamSimulator.readLastFromOutputStream(), "TWA 0 ".getBytes(StandardCharsets.UTF_8));
+
+        streamSimulator.writeForInputStream("ROK 17 testkey=testvalue");
+        Map<String, String> received = client.twa();
+        Assert.assertEquals(streamSimulator.readLastFromOutputStream(), "TWA 0 ".getBytes(StandardCharsets.UTF_8));
+        Assert.assertEquals(received, Collections.singletonMap("testkey", "testvalue"));
+    }
+
+    @Test(priority = 12)
+    public void testFuz2() throws IOException, ProtocolStateException, ProtocolFormatException,
+            ProtocolExecutionException {
+        streamSimulator.writeForInputStream("ERR 4 test");
+        try {
+            client.fuz("test".getBytes(StandardCharsets.UTF_8));
+            Assert.fail();
+        } catch (ProtocolExecutionException e) {
+            Assert.assertEquals(e.getMessage(), "test");
+        }
+        Assert.assertEquals(streamSimulator.readLastFromOutputStream(), "FUZ 4 test".getBytes(StandardCharsets.UTF_8));
 
         streamSimulator.writeForInputStream("ROK 39 testkey1=testvalue1,testkey2=testvalue2");
         Map<String, String> reference = new HashMap<>(2);
         reference.put("testkey1", "testvalue1");
         reference.put("testkey2", "testvalue2");
-        Map<String, String> received = client.ctf("test".getBytes(StandardCharsets.UTF_8));
-        Assert.assertEquals(streamSimulator.readLastFromOutputStream(), "CTF 4 test".getBytes(StandardCharsets.UTF_8));
+        Map<String, String> received = client.fuz("test".getBytes(StandardCharsets.UTF_8));
+        Assert.assertEquals(streamSimulator.readLastFromOutputStream(), "FUZ 4 test".getBytes(StandardCharsets.UTF_8));
         Assert.assertEquals(received, reference);
     }
 
-    @Test(priority = 11)
+    @Test(priority = 13)
     public void testRst2() throws IOException, ProtocolStateException, ProtocolFormatException,
             ProtocolExecutionException {
         streamSimulator.writeForInputStream("ERR 4 test");
@@ -302,7 +361,7 @@ public class ClientProtocolTest {
         Assert.assertEquals(streamSimulator.readLastFromOutputStream(), "RST 0 ".getBytes(StandardCharsets.UTF_8));
     }
 
-    @Test(priority = 12)
+    @Test(priority = 14)
     public void testAyt3() throws IOException, ProtocolStateException, ProtocolFormatException,
             ProtocolExecutionException {
         streamSimulator.writeForInputStream("ROK 12 version=test");

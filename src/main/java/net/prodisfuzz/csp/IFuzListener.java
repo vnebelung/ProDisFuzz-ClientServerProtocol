@@ -1,5 +1,5 @@
 /*
- * This file is part of ProDisFuzz, modified on 14.07.18 16:32.
+ * This file is part of ProDisFuzz, modified on 21.09.18 21:33.
  * Copyright (c) 2013-2018 Volker Nebelung <vnebelung@prodisfuzz.net>
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
@@ -11,12 +11,12 @@ package net.prodisfuzz.csp;
 import java.util.Map;
 
 /**
- * This interface represents a listener for the RST command.
+ * This interface represents a listener for the FUZ command.
  */
-public interface ICttListener {
+public interface IFuzListener {
 
     /**
-     * Receives an CTT command and returns the data the server did collect during the execution. If the listener cannot
+     * Receives an FUZ command and returns the data the server did collect during the execution. If the listener cannot
      * process the command for whatever reason it must throw an ProtocolExecutionException.
      *
      * @param data the data that is used as input for the fuzzing target

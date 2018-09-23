@@ -1,5 +1,5 @@
 /*
- * This file is part of ProDisFuzz, modified on 15.07.18 21:57.
+ * This file is part of ProDisFuzz, modified on 23.09.18 11:03.
  * Copyright (c) 2013-2018 Volker Nebelung <vnebelung@prodisfuzz.net>
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
@@ -20,20 +20,22 @@ public class StateTest {
     public void setUp() {
         state = new State();
         state.addTransition(StateMachine.ClientRequestCommand.RST, StateMachine.StateType.NEW);
-        state.addTransition(StateMachine.ClientRequestCommand.CTF, StateMachine.StateType.CONNECTOR_READY);
+        state.addTransition(StateMachine.ClientRequestCommand.FUZ, StateMachine.StateType.CONNECTOR_READY);
     }
 
     @Test
     public void testGetNextStateFor() {
         Assert.assertEquals(state.getNextStateFor(StateMachine.ClientRequestCommand.RST), StateMachine.StateType.NEW);
-        Assert.assertEquals(state.getNextStateFor(StateMachine.ClientRequestCommand.CTF),
+        Assert.assertEquals(state.getNextStateFor(StateMachine.ClientRequestCommand.FUZ),
                 StateMachine.StateType.CONNECTOR_READY);
-        Assert.assertNull(state.getNextStateFor(StateMachine.ClientRequestCommand.CTT));
+        Assert.assertNull(state.getNextStateFor(StateMachine.ClientRequestCommand.TCO));
         Assert.assertNull(state.getNextStateFor(StateMachine.ClientRequestCommand.AYT));
         Assert.assertNull(state.getNextStateFor(StateMachine.ClientRequestCommand.SCO));
         Assert.assertNull(state.getNextStateFor(StateMachine.ClientRequestCommand.SCP));
         Assert.assertNull(state.getNextStateFor(StateMachine.ClientRequestCommand.SWA));
         Assert.assertNull(state.getNextStateFor(StateMachine.ClientRequestCommand.GWA));
+        Assert.assertNull(state.getNextStateFor(StateMachine.ClientRequestCommand.SWP));
+        Assert.assertNull(state.getNextStateFor(StateMachine.ClientRequestCommand.TWA));
     }
 
     @SuppressWarnings("EmptyMethod")

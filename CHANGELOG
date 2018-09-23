@@ -1,3 +1,15 @@
+2018-09-23, Version 8:
+
+- Added new protocol state WATCHER_READY
+- Added new protocol transition SWP from WATCHER_SET to WATCHER_SET
+- Added new protocol transition SWP from WATCHER_READY to WATCHER_SET
+- Added new protocol transition SWA from WATCHER_READY to WATCHER_SET
+- Added new protocol transition TWA from WATCHER_SET to WATCHER_READY
+- Added new protocol transition RST from WATCHER_READY to NEW
+- Removed protocol transition CTF from WATCHER_SET to FUZZING
+- Renamed protocol transition CTT to TCO
+- Renamed protocol transition CTF to FUZ
+
 2018-07-15, Version 7:
 
 - Weaken the regex for generic packet parsing

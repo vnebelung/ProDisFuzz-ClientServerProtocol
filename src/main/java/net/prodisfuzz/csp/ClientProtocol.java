@@ -1,5 +1,5 @@
 /*
- * This file is part of ProDisFuzz, modified on 15.07.18 21:57.
+ * This file is part of ProDisFuzz, modified on 22.09.18 00:53.
  * Copyright (c) 2013-2018 Volker Nebelung <vnebelung@prodisfuzz.net>
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
@@ -173,10 +173,10 @@ public class ClientProtocol {
     }
 
     /**
-     * Sends a "call target for testing" message that tells the server to call the target with the given valid data to
-     * verify that calling the target can be done successfully.
+     * Sends a "test connector" message that tells the server to call the target with the given valid data to verify
+     * that calling the target can be done successfully.
      *
-     * @param data the fuzzed data
+     * @param data the data needed to pass to the target for a successful execution
      * @return the parameters sent back from the server in a key-value format
      * @throws IOException                if an I/O error occurs
      * @throws ProtocolFormatException    if the received package is not of the format "CCC L… B…", CCC = three
@@ -184,10 +184,10 @@ public class ClientProtocol {
      * @throws ProtocolStateException     if the command is not allowed at the current protocol state
      * @throws ProtocolExecutionException if the server answered with an error message
      */
-    public Map<String, String> ctt(byte... data) throws IOException, ProtocolStateException, ProtocolFormatException,
+    public Map<String, String> tco(byte... data) throws IOException, ProtocolStateException, ProtocolFormatException,
             ProtocolExecutionException {
         OutgoingMessage outgoingMessage =
-                new OutgoingMessage(StateMachine.ClientRequestCommand.CTT, "data=" + Hex.byte2HexBin(data));
+                new OutgoingMessage(StateMachine.ClientRequestCommand.TCO, "data=" + Hex.byte2HexBin(data));
         byte[] body = sendReceive(outgoingMessage);
         return parseBody(body);
     }
@@ -234,8 +234,44 @@ public class ClientProtocol {
     }
 
     /**
-     * Sends a "call target with fuzz data" message that tells the server to call the target with the given fuzzed data.
-     * The server responds whether the target has crashed when executing the data.
+     * Sends a "set watcher parameters" message that sets parameters of the server's chosen watcher.
+     *
+     * @param watcherParameters the parameters to be sent
+     * @throws IOException                if an I/O error occurs
+     * @throws ProtocolStateException     if the command is not allowed at the current protocol state
+     * @throws ProtocolFormatException    if the received package is not of the format "CCC L… B…", CCC = three
+     *                                    character command, L… = length of body, B… = body with length L…
+     * @throws ProtocolExecutionException if the server answered with an error message
+     */
+    public void swp(Map<String, String> watcherParameters) throws IOException, ProtocolStateException,
+            ProtocolFormatException, ProtocolExecutionException {
+        OutgoingMessage outgoingMessage = new OutgoingMessage(StateMachine.ClientRequestCommand.SWP, watcherParameters);
+        sendReceive(outgoingMessage);
+    }
+
+    /**
+     * Sends a "test watcher" message that tells the server to call the target with the given valid data and monitor it
+     * to verify that monitoring the target can be done successfully.
+     *
+     * @param data the data needed to pass to the target for a successful execution
+     * @return the parameters sent back from the server in a key-value format
+     * @throws IOException                if an I/O error occurs
+     * @throws ProtocolFormatException    if the received package is not of the format "CCC L… B…", CCC = three
+     *                                    character command, L… = length of body, B… = body with length L…
+     * @throws ProtocolStateException     if the command is not allowed at the current protocol state
+     * @throws ProtocolExecutionException if the server answered with an error message
+     */
+    public Map<String, String> twa(byte... data) throws IOException, ProtocolStateException, ProtocolFormatException,
+            ProtocolExecutionException {
+        OutgoingMessage outgoingMessage =
+                new OutgoingMessage(StateMachine.ClientRequestCommand.TWA, "data=" + Hex.byte2HexBin(data));
+        byte[] body = sendReceive(outgoingMessage);
+        return parseBody(body);
+    }
+
+    /**
+     * Sends a "Fuzzing" message that tells the server to call the target with the given fuzzed data. The server
+     * responds whether the target has crashed when executing the data.
      *
      * @param data the fuzzed data
      * @return the parameters sent back from the server
@@ -245,10 +281,10 @@ public class ClientProtocol {
      * @throws ProtocolStateException     if the command is not allowed at the current protocol state
      * @throws ProtocolExecutionException if the server answered with an error message
      */
-    public Map<String, String> ctf(byte... data) throws IOException, ProtocolStateException, ProtocolFormatException,
+    public Map<String, String> fuz(byte... data) throws IOException, ProtocolStateException, ProtocolFormatException,
             ProtocolExecutionException {
         OutgoingMessage outgoingMessage =
-                new OutgoingMessage(StateMachine.ClientRequestCommand.CTF, "data=" + Hex.byte2HexBin(data));
+                new OutgoingMessage(StateMachine.ClientRequestCommand.FUZ, "data=" + Hex.byte2HexBin(data));
         byte[] body = sendReceive(outgoingMessage);
         return parseBody(body);
     }

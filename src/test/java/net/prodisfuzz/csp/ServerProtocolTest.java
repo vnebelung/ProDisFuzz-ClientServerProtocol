@@ -1,5 +1,5 @@
 /*
- * This file is part of ProDisFuzz, modified on 15.07.18 21:09.
+ * This file is part of ProDisFuzz, modified on 23.09.18 10:10.
  * Copyright (c) 2013-2018 Volker Nebelung <vnebelung@prodisfuzz.net>
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
@@ -26,24 +26,27 @@ public class ServerProtocolTest {
     private StreamSimulator streamSimulator;
     private ServerProtocol serverProtocol;
     private AytListener aytListener;
-    private CtfListener ctfListener;
-    private CttListener cttListener;
+    private FuzListener fuzListener;
+    private TcoListener tcoListener;
     private GcoListener gcoListener;
     private GwaListener gwaListener;
     private RstListener rstListener;
     private ScoListener scoListener;
     private ScpListener scpListener;
     private SwaListener swaListener;
+    private SwpListener swpListener;
+    private TwaListener twaListener;
 
     @BeforeMethod
     public void setUp() throws Exception {
         streamSimulator = new StreamSimulator();
         aytListener = new AytListener(123456);
-        Map<String, String> ctfParams = new HashMap<>(2);
-        ctfParams.put("a", "b");
-        ctfParams.put("c", "d");
-        ctfListener = new CtfListener(ctfParams);
-        cttListener = new CttListener(ctfParams);
+        Map<String, String> fuzParams = new HashMap<>(2);
+        fuzParams.put("a", "b");
+        fuzParams.put("c", "d");
+        fuzListener = new FuzListener(fuzParams);
+        tcoListener = new TcoListener(fuzParams);
+        twaListener = new TwaListener(fuzParams);
         Set<String> gcoParams = new HashSet<>(2);
         gcoParams.add("a");
         gcoParams.add("b");
@@ -53,9 +56,11 @@ public class ServerProtocolTest {
         scoListener = new ScoListener();
         scpListener = new ScpListener();
         swaListener = new SwaListener();
+        swpListener = new SwpListener();
         serverProtocol =
                 new ServerProtocol(streamSimulator.getInputStream(), streamSimulator.getOutputStream(), aytListener,
-                        gcoListener, scoListener, scpListener, cttListener, gwaListener, swaListener, ctfListener,
+                        gcoListener, scoListener, scpListener, tcoListener, gwaListener, swaListener, swpListener,
+                        twaListener, fuzListener,
                         rstListener);
     }
 
@@ -145,19 +150,19 @@ public class ServerProtocolTest {
         Assert.assertEquals(scpListener.getInValue(), tmp);
         Assert.assertEquals(streamSimulator.readLastFromOutputStream(), "ROK 0 ".getBytes(StandardCharsets.UTF_8));
 
-        streamSimulator.writeForInputStream("CTT 29 dummy=dummy,data=000102030405");
-        cttListener.setException("testexception");
+        streamSimulator.writeForInputStream("TCO 29 dummy=dummy,data=000102030405");
+        tcoListener.setException("testexception");
         serverProtocol.receive();
-        Assert.assertTrue(cttListener.isTriggered());
-        Assert.assertEquals(cttListener.getInValue(), new byte[]{0, 1, 2, 3, 4, 5});
+        Assert.assertTrue(tcoListener.isTriggered());
+        Assert.assertEquals(tcoListener.getInValue(), new byte[]{0, 1, 2, 3, 4, 5});
         Assert.assertEquals(streamSimulator.readLastFromOutputStream(),
                 "ERR 13 testexception".getBytes(StandardCharsets.UTF_8));
 
-        cttListener.reset();
-        streamSimulator.writeForInputStream("CTT 29 dummy=dummy,data=000102030405");
+        tcoListener.reset();
+        streamSimulator.writeForInputStream("TCO 29 dummy=dummy,data=000102030405");
         serverProtocol.receive();
-        Assert.assertTrue(cttListener.isTriggered());
-        Assert.assertEquals(cttListener.getInValue(), new byte[]{0, 1, 2, 3, 4, 5});
+        Assert.assertTrue(tcoListener.isTriggered());
+        Assert.assertEquals(tcoListener.getInValue(), new byte[]{0, 1, 2, 3, 4, 5});
         Assert.assertEquals(streamSimulator.readLastFromOutputStream(),
                 "ROK 7 a=b,c=d".getBytes(StandardCharsets.UTF_8));
 
@@ -190,19 +195,53 @@ public class ServerProtocolTest {
         Assert.assertEquals(swaListener.getInValue(), "b");
         Assert.assertEquals(streamSimulator.readLastFromOutputStream(), "ROK 0 ".getBytes(StandardCharsets.UTF_8));
 
-        streamSimulator.writeForInputStream("CTF 29 dummy=dummy,data=000102030405");
-        ctfListener.setException("testexception");
+        streamSimulator.writeForInputStream("SWP 41 dummy1=dummy2,dummy3=dummy4,dummy3=dummy5");
+        swpListener.setException("testexception");
         serverProtocol.receive();
-        Assert.assertTrue(ctfListener.isTriggered());
-        Assert.assertEquals(ctfListener.getInValue(), new byte[]{0, 1, 2, 3, 4, 5});
+        Assert.assertTrue(swpListener.isTriggered());
+        tmp = new HashMap<>(2);
+        tmp.put("dummy1", "dummy2");
+        tmp.put("dummy3", "dummy5");
+        Assert.assertEquals(swpListener.getInValue(), tmp);
         Assert.assertEquals(streamSimulator.readLastFromOutputStream(),
                 "ERR 13 testexception".getBytes(StandardCharsets.UTF_8));
 
-        ctfListener.reset();
-        streamSimulator.writeForInputStream("CTF 29 dummy=dummy,data=000102030405");
+        swpListener.reset();
+        streamSimulator.writeForInputStream("SWP 41 dummy1=dummy2,dummy3=dummy4,dummy3=dummy5");
         serverProtocol.receive();
-        Assert.assertTrue(ctfListener.isTriggered());
-        Assert.assertEquals(ctfListener.getInValue(), new byte[]{0, 1, 2, 3, 4, 5});
+        Assert.assertTrue(swpListener.isTriggered());
+        Assert.assertEquals(swpListener.getInValue(), tmp);
+        Assert.assertEquals(streamSimulator.readLastFromOutputStream(), "ROK 0 ".getBytes(StandardCharsets.UTF_8));
+
+        streamSimulator.writeForInputStream("TWA 29 dummy=dummy,data=000102030405");
+        twaListener.setException("testexception");
+        serverProtocol.receive();
+        Assert.assertTrue(twaListener.isTriggered());
+        Assert.assertEquals(twaListener.getInValue(), new byte[]{0, 1, 2, 3, 4, 5});
+        Assert.assertEquals(streamSimulator.readLastFromOutputStream(),
+                "ERR 13 testexception".getBytes(StandardCharsets.UTF_8));
+
+        twaListener.reset();
+        streamSimulator.writeForInputStream("TWA 29 dummy=dummy,data=000102030405");
+        serverProtocol.receive();
+        Assert.assertTrue(twaListener.isTriggered());
+        Assert.assertEquals(twaListener.getInValue(), new byte[]{0, 1, 2, 3, 4, 5});
+        Assert.assertEquals(streamSimulator.readLastFromOutputStream(),
+                "ROK 7 a=b,c=d".getBytes(StandardCharsets.UTF_8));
+
+        streamSimulator.writeForInputStream("FUZ 29 dummy=dummy,data=000102030405");
+        fuzListener.setException("testexception");
+        serverProtocol.receive();
+        Assert.assertTrue(fuzListener.isTriggered());
+        Assert.assertEquals(fuzListener.getInValue(), new byte[]{0, 1, 2, 3, 4, 5});
+        Assert.assertEquals(streamSimulator.readLastFromOutputStream(),
+                "ERR 13 testexception".getBytes(StandardCharsets.UTF_8));
+
+        fuzListener.reset();
+        streamSimulator.writeForInputStream("FUZ 29 dummy=dummy,data=000102030405");
+        serverProtocol.receive();
+        Assert.assertTrue(fuzListener.isTriggered());
+        Assert.assertEquals(fuzListener.getInValue(), new byte[]{0, 1, 2, 3, 4, 5});
         Assert.assertEquals(streamSimulator.readLastFromOutputStream(),
                 "ROK 7 a=b,c=d".getBytes(StandardCharsets.UTF_8));
 

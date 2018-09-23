@@ -1,5 +1,5 @@
 /*
- * This file is part of ProDisFuzz, modified on 15.07.18 21:57.
+ * This file is part of ProDisFuzz, modified on 22.09.18 01:23.
  * Copyright (c) 2013-2018 Volker Nebelung <vnebelung@prodisfuzz.net>
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
@@ -39,7 +39,7 @@ public class StateMachine {
         state = new State();
         state.addTransition(ClientRequestCommand.SCP, StateType.CONNECTOR_SET);
         state.addTransition(ClientRequestCommand.SCO, StateType.CONNECTOR_SET);
-        state.addTransition(ClientRequestCommand.CTT, StateType.CONNECTOR_READY);
+        state.addTransition(ClientRequestCommand.TCO, StateType.CONNECTOR_READY);
         state.addTransition(ClientRequestCommand.RST, StateType.NEW);
         states.put(StateType.CONNECTOR_SET, state);
 
@@ -53,12 +53,20 @@ public class StateMachine {
 
         state = new State();
         state.addTransition(ClientRequestCommand.SWA, StateType.WATCHER_SET);
-        state.addTransition(ClientRequestCommand.CTF, StateType.FUZZING);
+        state.addTransition(ClientRequestCommand.SWP, StateType.WATCHER_SET);
+        state.addTransition(ClientRequestCommand.TWA, StateType.WATCHER_READY);
         state.addTransition(ClientRequestCommand.RST, StateType.NEW);
         states.put(StateType.WATCHER_SET, state);
 
         state = new State();
-        state.addTransition(ClientRequestCommand.CTF, StateType.FUZZING);
+        state.addTransition(ClientRequestCommand.SWA, StateType.WATCHER_SET);
+        state.addTransition(ClientRequestCommand.SWP, StateType.WATCHER_SET);
+        state.addTransition(ClientRequestCommand.FUZ, StateType.FUZZING);
+        state.addTransition(ClientRequestCommand.RST, StateType.NEW);
+        states.put(StateType.WATCHER_READY, state);
+
+        state = new State();
+        state.addTransition(ClientRequestCommand.FUZ, StateType.FUZZING);
         state.addTransition(ClientRequestCommand.RST, StateType.NEW);
         states.put(StateType.FUZZING, state);
 
@@ -92,10 +100,10 @@ public class StateMachine {
         return states.get(currentStateType).getNextStateFor(command) != null;
     }
 
-    enum StateType {NEW, MONITOR_SET, CONNECTOR_SET, CONNECTOR_READY, WATCHER_SET, FUZZING}
+    enum StateType {NEW, MONITOR_SET, CONNECTOR_SET, CONNECTOR_READY, WATCHER_SET, WATCHER_READY, FUZZING}
 
     public enum ServerAnswerCommand {ROK, ERR}
 
-    public enum ClientRequestCommand {AYT, RST, GCO, SCO, SCP, CTT, GWA, SWA, CTF}
+    public enum ClientRequestCommand {AYT, RST, GCO, SCO, SCP, TCO, GWA, SWA, SWP, TWA, FUZ}
 
 }

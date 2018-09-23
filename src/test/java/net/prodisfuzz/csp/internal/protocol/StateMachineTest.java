@@ -1,5 +1,5 @@
 /*
- * This file is part of ProDisFuzz, modified on 15.07.18 21:57.
+ * This file is part of ProDisFuzz, modified on 23.09.18 01:25.
  * Copyright (c) 2013-2018 Volker Nebelung <vnebelung@prodisfuzz.net>
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
@@ -55,7 +55,7 @@ public class StateMachineTest {
         }
 
         try {
-            stateMachine.updateWith(StateMachine.ClientRequestCommand.CTT);
+            stateMachine.updateWith(StateMachine.ClientRequestCommand.TCO);
             Assert.fail();
         } catch (ProtocolStateException ignored) {
         }
@@ -73,7 +73,19 @@ public class StateMachineTest {
         }
 
         try {
-            stateMachine.updateWith(StateMachine.ClientRequestCommand.CTF);
+            stateMachine.updateWith(StateMachine.ClientRequestCommand.SWP);
+            Assert.fail();
+        } catch (ProtocolStateException ignored) {
+        }
+
+        try {
+            stateMachine.updateWith(StateMachine.ClientRequestCommand.TWA);
+            Assert.fail();
+        } catch (ProtocolStateException ignored) {
+        }
+
+        try {
+            stateMachine.updateWith(StateMachine.ClientRequestCommand.FUZ);
             Assert.fail();
         } catch (ProtocolStateException ignored) {
         }
@@ -117,7 +129,7 @@ public class StateMachineTest {
         }
 
         try {
-            stateMachine.updateWith(StateMachine.ClientRequestCommand.CTT);
+            stateMachine.updateWith(StateMachine.ClientRequestCommand.TCO);
             Assert.fail();
         } catch (ProtocolStateException ignored) {
         }
@@ -135,7 +147,19 @@ public class StateMachineTest {
         }
 
         try {
-            stateMachine.updateWith(StateMachine.ClientRequestCommand.CTF);
+            stateMachine.updateWith(StateMachine.ClientRequestCommand.SWP);
+            Assert.fail();
+        } catch (ProtocolStateException ignored) {
+        }
+
+        try {
+            stateMachine.updateWith(StateMachine.ClientRequestCommand.TWA);
+            Assert.fail();
+        } catch (ProtocolStateException ignored) {
+        }
+
+        try {
+            stateMachine.updateWith(StateMachine.ClientRequestCommand.FUZ);
             Assert.fail();
         } catch (ProtocolStateException ignored) {
         }
@@ -179,7 +203,7 @@ public class StateMachineTest {
         }
 
         try {
-            stateMachine.updateWith(StateMachine.ClientRequestCommand.CTT);
+            stateMachine.updateWith(StateMachine.ClientRequestCommand.TCO);
         } catch (ProtocolStateException ignored) {
             Assert.fail();
         }
@@ -200,7 +224,19 @@ public class StateMachineTest {
         }
 
         try {
-            stateMachine.updateWith(StateMachine.ClientRequestCommand.CTF);
+            stateMachine.updateWith(StateMachine.ClientRequestCommand.SWP);
+            Assert.fail();
+        } catch (ProtocolStateException ignored) {
+        }
+
+        try {
+            stateMachine.updateWith(StateMachine.ClientRequestCommand.TWA);
+            Assert.fail();
+        } catch (ProtocolStateException ignored) {
+        }
+
+        try {
+            stateMachine.updateWith(StateMachine.ClientRequestCommand.FUZ);
             Assert.fail();
         } catch (ProtocolStateException ignored) {
         }
@@ -210,7 +246,7 @@ public class StateMachineTest {
     public void testUpdateWithConnectorReady() throws ProtocolStateException {
         stateMachine.updateWith(StateMachine.ClientRequestCommand.AYT);
         stateMachine.updateWith(StateMachine.ClientRequestCommand.SCO);
-        stateMachine.updateWith(StateMachine.ClientRequestCommand.CTT);
+        stateMachine.updateWith(StateMachine.ClientRequestCommand.TCO);
 
         try {
             stateMachine.updateWith(StateMachine.ClientRequestCommand.AYT);
@@ -225,7 +261,7 @@ public class StateMachineTest {
         }
         stateMachine.updateWith(StateMachine.ClientRequestCommand.AYT);
         stateMachine.updateWith(StateMachine.ClientRequestCommand.SCO);
-        stateMachine.updateWith(StateMachine.ClientRequestCommand.CTT);
+        stateMachine.updateWith(StateMachine.ClientRequestCommand.TCO);
 
         try {
             stateMachine.updateWith(StateMachine.ClientRequestCommand.GCO);
@@ -241,7 +277,7 @@ public class StateMachineTest {
         stateMachine.updateWith(StateMachine.ClientRequestCommand.RST);
         stateMachine.updateWith(StateMachine.ClientRequestCommand.AYT);
         stateMachine.updateWith(StateMachine.ClientRequestCommand.SCO);
-        stateMachine.updateWith(StateMachine.ClientRequestCommand.CTT);
+        stateMachine.updateWith(StateMachine.ClientRequestCommand.TCO);
 
         try {
             stateMachine.updateWith(StateMachine.ClientRequestCommand.SCP);
@@ -251,10 +287,10 @@ public class StateMachineTest {
         stateMachine.updateWith(StateMachine.ClientRequestCommand.RST);
         stateMachine.updateWith(StateMachine.ClientRequestCommand.AYT);
         stateMachine.updateWith(StateMachine.ClientRequestCommand.SCO);
-        stateMachine.updateWith(StateMachine.ClientRequestCommand.CTT);
+        stateMachine.updateWith(StateMachine.ClientRequestCommand.TCO);
 
         try {
-            stateMachine.updateWith(StateMachine.ClientRequestCommand.CTT);
+            stateMachine.updateWith(StateMachine.ClientRequestCommand.TCO);
             Assert.fail();
         } catch (ProtocolStateException ignored) {
         }
@@ -273,10 +309,22 @@ public class StateMachineTest {
         stateMachine.updateWith(StateMachine.ClientRequestCommand.RST);
         stateMachine.updateWith(StateMachine.ClientRequestCommand.AYT);
         stateMachine.updateWith(StateMachine.ClientRequestCommand.SCO);
-        stateMachine.updateWith(StateMachine.ClientRequestCommand.CTT);
+        stateMachine.updateWith(StateMachine.ClientRequestCommand.TCO);
 
         try {
-            stateMachine.updateWith(StateMachine.ClientRequestCommand.CTF);
+            stateMachine.updateWith(StateMachine.ClientRequestCommand.SWP);
+            Assert.fail();
+        } catch (ProtocolStateException ignored) {
+        }
+
+        try {
+            stateMachine.updateWith(StateMachine.ClientRequestCommand.TWA);
+            Assert.fail();
+        } catch (ProtocolStateException ignored) {
+        }
+
+        try {
+            stateMachine.updateWith(StateMachine.ClientRequestCommand.FUZ);
             Assert.fail();
         } catch (ProtocolStateException ignored) {
         }
@@ -286,7 +334,7 @@ public class StateMachineTest {
     public void testUpdateWithWatcherSet() throws ProtocolStateException {
         stateMachine.updateWith(StateMachine.ClientRequestCommand.AYT);
         stateMachine.updateWith(StateMachine.ClientRequestCommand.SCO);
-        stateMachine.updateWith(StateMachine.ClientRequestCommand.CTT);
+        stateMachine.updateWith(StateMachine.ClientRequestCommand.TCO);
         stateMachine.updateWith(StateMachine.ClientRequestCommand.SWA);
 
         try {
@@ -302,7 +350,7 @@ public class StateMachineTest {
         }
         stateMachine.updateWith(StateMachine.ClientRequestCommand.AYT);
         stateMachine.updateWith(StateMachine.ClientRequestCommand.SCO);
-        stateMachine.updateWith(StateMachine.ClientRequestCommand.CTT);
+        stateMachine.updateWith(StateMachine.ClientRequestCommand.TCO);
         stateMachine.updateWith(StateMachine.ClientRequestCommand.SWA);
 
         try {
@@ -324,7 +372,7 @@ public class StateMachineTest {
         }
 
         try {
-            stateMachine.updateWith(StateMachine.ClientRequestCommand.CTT);
+            stateMachine.updateWith(StateMachine.ClientRequestCommand.TCO);
             Assert.fail();
         } catch (ProtocolStateException ignored) {
         }
@@ -342,7 +390,116 @@ public class StateMachineTest {
         }
 
         try {
-            stateMachine.updateWith(StateMachine.ClientRequestCommand.CTF);
+            stateMachine.updateWith(StateMachine.ClientRequestCommand.SWP);
+        } catch (ProtocolStateException ignored) {
+            Assert.fail();
+        }
+
+        try {
+            stateMachine.updateWith(StateMachine.ClientRequestCommand.TWA);
+        } catch (ProtocolStateException ignored) {
+            Assert.fail();
+        }
+        stateMachine.updateWith(StateMachine.ClientRequestCommand.RST);
+        stateMachine.updateWith(StateMachine.ClientRequestCommand.AYT);
+        stateMachine.updateWith(StateMachine.ClientRequestCommand.SCO);
+        stateMachine.updateWith(StateMachine.ClientRequestCommand.TCO);
+        stateMachine.updateWith(StateMachine.ClientRequestCommand.SWA);
+
+        try {
+            stateMachine.updateWith(StateMachine.ClientRequestCommand.FUZ);
+            Assert.fail();
+        } catch (ProtocolStateException ignored) {
+        }
+    }
+
+    @Test
+    public void testUpdateWithWatcherReady() throws ProtocolStateException {
+        stateMachine.updateWith(StateMachine.ClientRequestCommand.AYT);
+        stateMachine.updateWith(StateMachine.ClientRequestCommand.SCO);
+        stateMachine.updateWith(StateMachine.ClientRequestCommand.TCO);
+        stateMachine.updateWith(StateMachine.ClientRequestCommand.SWA);
+        stateMachine.updateWith(StateMachine.ClientRequestCommand.TWA);
+
+        try {
+            stateMachine.updateWith(StateMachine.ClientRequestCommand.AYT);
+            Assert.fail();
+        } catch (ProtocolStateException ignored) {
+        }
+
+        try {
+            stateMachine.updateWith(StateMachine.ClientRequestCommand.RST);
+        } catch (ProtocolStateException ignored) {
+            Assert.fail();
+        }
+        stateMachine.updateWith(StateMachine.ClientRequestCommand.AYT);
+        stateMachine.updateWith(StateMachine.ClientRequestCommand.SCO);
+        stateMachine.updateWith(StateMachine.ClientRequestCommand.TCO);
+        stateMachine.updateWith(StateMachine.ClientRequestCommand.SWA);
+        stateMachine.updateWith(StateMachine.ClientRequestCommand.TWA);
+
+        try {
+            stateMachine.updateWith(StateMachine.ClientRequestCommand.GCO);
+            Assert.fail();
+        } catch (ProtocolStateException ignored) {
+        }
+
+        try {
+            stateMachine.updateWith(StateMachine.ClientRequestCommand.SCO);
+            Assert.fail();
+        } catch (ProtocolStateException ignored) {
+        }
+
+        try {
+            stateMachine.updateWith(StateMachine.ClientRequestCommand.SCP);
+            Assert.fail();
+        } catch (ProtocolStateException ignored) {
+        }
+
+        try {
+            stateMachine.updateWith(StateMachine.ClientRequestCommand.TCO);
+            Assert.fail();
+        } catch (ProtocolStateException ignored) {
+        }
+
+        try {
+            stateMachine.updateWith(StateMachine.ClientRequestCommand.GWA);
+            Assert.fail();
+        } catch (ProtocolStateException ignored) {
+        }
+
+        try {
+            stateMachine.updateWith(StateMachine.ClientRequestCommand.SWA);
+        } catch (ProtocolStateException ignored) {
+            Assert.fail();
+        }
+        stateMachine.updateWith(StateMachine.ClientRequestCommand.RST);
+        stateMachine.updateWith(StateMachine.ClientRequestCommand.AYT);
+        stateMachine.updateWith(StateMachine.ClientRequestCommand.SCO);
+        stateMachine.updateWith(StateMachine.ClientRequestCommand.TCO);
+        stateMachine.updateWith(StateMachine.ClientRequestCommand.SWA);
+        stateMachine.updateWith(StateMachine.ClientRequestCommand.TWA);
+
+        try {
+            stateMachine.updateWith(StateMachine.ClientRequestCommand.SWP);
+        } catch (ProtocolStateException ignored) {
+            Assert.fail();
+        }
+        stateMachine.updateWith(StateMachine.ClientRequestCommand.RST);
+        stateMachine.updateWith(StateMachine.ClientRequestCommand.AYT);
+        stateMachine.updateWith(StateMachine.ClientRequestCommand.SCO);
+        stateMachine.updateWith(StateMachine.ClientRequestCommand.TCO);
+        stateMachine.updateWith(StateMachine.ClientRequestCommand.SWA);
+        stateMachine.updateWith(StateMachine.ClientRequestCommand.TWA);
+
+        try {
+            stateMachine.updateWith(StateMachine.ClientRequestCommand.TWA);
+            Assert.fail();
+        } catch (ProtocolStateException ignored) {
+        }
+
+        try {
+            stateMachine.updateWith(StateMachine.ClientRequestCommand.FUZ);
         } catch (ProtocolStateException ignored) {
             Assert.fail();
         }
@@ -352,9 +509,10 @@ public class StateMachineTest {
     public void testUpdateWithFuzzing() throws ProtocolStateException {
         stateMachine.updateWith(StateMachine.ClientRequestCommand.AYT);
         stateMachine.updateWith(StateMachine.ClientRequestCommand.SCO);
-        stateMachine.updateWith(StateMachine.ClientRequestCommand.CTT);
+        stateMachine.updateWith(StateMachine.ClientRequestCommand.TCO);
         stateMachine.updateWith(StateMachine.ClientRequestCommand.SWA);
-        stateMachine.updateWith(StateMachine.ClientRequestCommand.CTF);
+        stateMachine.updateWith(StateMachine.ClientRequestCommand.TWA);
+        stateMachine.updateWith(StateMachine.ClientRequestCommand.FUZ);
 
         try {
             stateMachine.updateWith(StateMachine.ClientRequestCommand.AYT);
@@ -369,9 +527,10 @@ public class StateMachineTest {
         }
         stateMachine.updateWith(StateMachine.ClientRequestCommand.AYT);
         stateMachine.updateWith(StateMachine.ClientRequestCommand.SCO);
-        stateMachine.updateWith(StateMachine.ClientRequestCommand.CTT);
+        stateMachine.updateWith(StateMachine.ClientRequestCommand.TCO);
         stateMachine.updateWith(StateMachine.ClientRequestCommand.SWA);
-        stateMachine.updateWith(StateMachine.ClientRequestCommand.CTF);
+        stateMachine.updateWith(StateMachine.ClientRequestCommand.TWA);
+        stateMachine.updateWith(StateMachine.ClientRequestCommand.FUZ);
 
         try {
             stateMachine.updateWith(StateMachine.ClientRequestCommand.GCO);
@@ -392,7 +551,7 @@ public class StateMachineTest {
         }
 
         try {
-            stateMachine.updateWith(StateMachine.ClientRequestCommand.CTT);
+            stateMachine.updateWith(StateMachine.ClientRequestCommand.TCO);
             Assert.fail();
         } catch (ProtocolStateException ignored) {
         }
@@ -410,7 +569,19 @@ public class StateMachineTest {
         }
 
         try {
-            stateMachine.updateWith(StateMachine.ClientRequestCommand.CTF);
+            stateMachine.updateWith(StateMachine.ClientRequestCommand.SWP);
+            Assert.fail();
+        } catch (ProtocolStateException ignored) {
+        }
+
+        try {
+            stateMachine.updateWith(StateMachine.ClientRequestCommand.TWA);
+            Assert.fail();
+        } catch (ProtocolStateException ignored) {
+        }
+
+        try {
+            stateMachine.updateWith(StateMachine.ClientRequestCommand.FUZ);
         } catch (ProtocolStateException ignored) {
             Assert.fail();
         }
@@ -419,73 +590,99 @@ public class StateMachineTest {
     @Test
     public void testIsAllowedAtCurrentState() throws ProtocolStateException {
         Assert.assertTrue(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.AYT));
-        Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.CTF));
-        Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.CTT));
         Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.GCO));
         Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.SCO));
         Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.SCP));
+        Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.TCO));
         Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.GWA));
         Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.SWA));
+        Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.SWP));
+        Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.TWA));
+        Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.FUZ));
         Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.RST));
 
         stateMachine.updateWith(StateMachine.ClientRequestCommand.AYT);
 
         Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.AYT));
-        Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.CTF));
-        Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.CTT));
         Assert.assertTrue(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.GCO));
         Assert.assertTrue(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.SCO));
         Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.SCP));
+        Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.TCO));
         Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.GWA));
         Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.SWA));
+        Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.SWP));
+        Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.TWA));
+        Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.FUZ));
         Assert.assertTrue(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.RST));
 
         stateMachine.updateWith(StateMachine.ClientRequestCommand.SCO);
 
         Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.AYT));
-        Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.CTF));
-        Assert.assertTrue(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.CTT));
         Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.GCO));
         Assert.assertTrue(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.SCO));
         Assert.assertTrue(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.SCP));
+        Assert.assertTrue(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.TCO));
         Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.GWA));
         Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.SWA));
+        Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.SWP));
+        Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.TWA));
+        Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.FUZ));
         Assert.assertTrue(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.RST));
 
-        stateMachine.updateWith(StateMachine.ClientRequestCommand.CTT);
+        stateMachine.updateWith(StateMachine.ClientRequestCommand.TCO);
 
         Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.AYT));
-        Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.CTF));
-        Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.CTT));
         Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.GCO));
         Assert.assertTrue(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.SCO));
         Assert.assertTrue(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.SCP));
+        Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.TCO));
         Assert.assertTrue(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.GWA));
         Assert.assertTrue(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.SWA));
+        Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.SWP));
+        Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.TWA));
+        Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.FUZ));
         Assert.assertTrue(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.RST));
 
         stateMachine.updateWith(StateMachine.ClientRequestCommand.SWA);
 
         Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.AYT));
-        Assert.assertTrue(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.CTF));
-        Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.CTT));
         Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.GCO));
         Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.SCO));
         Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.SCP));
+        Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.TCO));
         Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.GWA));
         Assert.assertTrue(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.SWA));
+        Assert.assertTrue(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.SWP));
+        Assert.assertTrue(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.TWA));
+        Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.FUZ));
         Assert.assertTrue(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.RST));
 
-        stateMachine.updateWith(StateMachine.ClientRequestCommand.CTF);
+        stateMachine.updateWith(StateMachine.ClientRequestCommand.TWA);
 
         Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.AYT));
-        Assert.assertTrue(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.CTF));
-        Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.CTT));
         Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.GCO));
         Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.SCO));
         Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.SCP));
+        Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.TCO));
+        Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.GWA));
+        Assert.assertTrue(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.SWA));
+        Assert.assertTrue(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.SWP));
+        Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.TWA));
+        Assert.assertTrue(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.FUZ));
+        Assert.assertTrue(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.RST));
+
+        stateMachine.updateWith(StateMachine.ClientRequestCommand.FUZ);
+
+        Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.AYT));
+        Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.GCO));
+        Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.SCO));
+        Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.SCP));
+        Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.TCO));
         Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.GWA));
         Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.SWA));
+        Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.SWP));
+        Assert.assertFalse(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.TWA));
+        Assert.assertTrue(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.FUZ));
         Assert.assertTrue(stateMachine.isAllowedAtCurrentState(StateMachine.ClientRequestCommand.RST));
     }
 }

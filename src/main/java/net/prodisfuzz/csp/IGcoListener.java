@@ -1,5 +1,5 @@
 /*
- * This file is part of ProDisFuzz, modified on 14.07.18 16:34.
+ * This file is part of ProDisFuzz, modified on 21.09.18 21:33.
  * Copyright (c) 2013-2018 Volker Nebelung <vnebelung@prodisfuzz.net>
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
@@ -11,7 +11,7 @@ package net.prodisfuzz.csp;
 import java.util.Set;
 
 /**
- * This interface represents a listener for the RST command.
+ * This interface represents a listener for the GCO command.
  */
 public interface IGcoListener {
 
