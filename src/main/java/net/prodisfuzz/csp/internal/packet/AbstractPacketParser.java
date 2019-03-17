@@ -1,6 +1,6 @@
 /*
- * This file is part of ProDisFuzz, modified on 15.07.18 21:57.
- * Copyright (c) 2013-2018 Volker Nebelung <vnebelung@prodisfuzz.net>
+ * This file is part of ProDisFuzz, modified on 3/17/19 11:44 PM.
+ * Copyright (c) 2013-2019 Volker Nebelung <vnebelung@prodisfuzz.net>
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
  * as published by Sam Hocevar. See the COPYING file for more details.
@@ -16,8 +16,11 @@ import java.util.Map;
 
 /**
  * This class represents a not yet parsed packet that is received by a client or server.
+ *
+ * @param <C> the commands that can be used by an incoming message
+ * @param <I> the implementation class of incoming messages
  */
-public abstract class AbstractPacketParser<V, C> {
+public abstract class AbstractPacketParser<I, C> {
 
     private InputStream inputStream;
 
@@ -31,10 +34,9 @@ public abstract class AbstractPacketParser<V, C> {
     }
 
     /**
-     * Reads an incoming message from a server or client input stream and tries to parse the packet in respect to
-     * the given allowed protocol states and returns it. A
-     * valid packet structure is as follows: "CCC L… B…", CCC = three character command, L… = length of body, B… =
-     * body with length L…
+     * Reads an incoming message from a server or client input stream and tries to parse the packet in respect to the
+     * given allowed protocol states and returns it. A valid packet structure is as follows: "CCC L… B…", CCC = three
+     * character command, L… = length of body, B… = body with length L…
      *
      * @param allowedStates        the allowed protocol states
      * @param commandClass         the class of the commands
@@ -44,15 +46,14 @@ public abstract class AbstractPacketParser<V, C> {
      * @throws ProtocolFormatException if the received package is not of the format "CCC L… B…", CCC = three character
      *                                 command, L… = length of body, B… = body with length L…
      */
-    protected V readIncomingMessage(Class<V> incomingMessageClass, Class<C> commandClass,
+    protected I readIncomingMessage(Class<I> incomingMessageClass, Class<C> commandClass,
                                     Map<String, C> allowedStates) throws IOException, ProtocolFormatException {
         try {
             C command = readCommand(allowedStates);
             int length = readLength();
             byte[] body = readBody(length);
             return incomingMessageClass.getConstructor(commandClass, body.getClass()).newInstance(command, body);
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException
-                ignored) {
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException ignored) {
         } catch (ProtocolFormatException e) {
             clearInputStream();
             throw e;
@@ -62,9 +63,8 @@ public abstract class AbstractPacketParser<V, C> {
     }
 
     /**
-     * Reads the packet's three characters command and a preceding space character "CCC " from an input data
-     * stream. Packet structure: "CCC L… B…", CCC = three character command, L… = length of body, B… = body with
-     * length L…
+     * Reads the packet's three characters command and a preceding space character "CCC " from an input data stream.
+     * Packet structure: "CCC L… B…", CCC = three character command, L… = length of body, B… = body with length L…
      *
      * @param allowedCommands the allowed commands
      * @return the packet's command
@@ -73,7 +73,6 @@ public abstract class AbstractPacketParser<V, C> {
      */
     private C readCommand(Map<String, C> allowedCommands) throws IOException, ProtocolFormatException {
         byte[] commandBuffer = new byte[4];
-        //noinspection ResultOfMethodCallIgnored
         if (inputStream.read(commandBuffer) != 4) {
             throw new ProtocolFormatException("Received command has not the structure 'CCC '");
         }
@@ -121,8 +120,7 @@ public abstract class AbstractPacketParser<V, C> {
 
     /**
      * Reads the packet's body from an input stream with the given length. Packet structure: "CCC L… B…", CCC = three
-     * character command,
-     * L… = length of body, B… = body with length L…
+     * character command, L… = length of body, B… = body with length L…
      *
      * @param length the length of the body
      * @return the packet's body
