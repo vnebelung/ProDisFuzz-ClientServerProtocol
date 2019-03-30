@@ -1,3 +1,8 @@
+2019-03-30, Version 10:
+ - More unit test
+ - Protocol execution exception can be called in printf style
+ - Check for illegal characters in outgoing messages
+
 2019-03-20, Version 9:
  - Added ability for the protocol execution exception to accept a format string
 

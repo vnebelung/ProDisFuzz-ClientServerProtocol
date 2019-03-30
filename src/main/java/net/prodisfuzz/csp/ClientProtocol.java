@@ -1,6 +1,6 @@
 /*
- * This file is part of ProDisFuzz, modified on 22.09.18 00:53.
- * Copyright (c) 2013-2018 Volker Nebelung <vnebelung@prodisfuzz.net>
+ * This file is part of ProDisFuzz, modified on 3/27/19 12:20 AM.
+ * Copyright (c) 2013-2019 Volker Nebelung <vnebelung@prodisfuzz.net>
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
  * as published by Sam Hocevar. See the COPYING file for more details.
@@ -77,25 +77,22 @@ public class ClientProtocol {
      * Sends an "are you there" message that checks whether the server is reachable. When the server is receiving this
      * message, it must respond with its version number.
      *
-     * @return the version sent back from the server with the map key "version" or an empty map if the server's response
-     * does not contain a version
+     * @return the version sent back from the server with the map key "version" or an empty string if the server's
+     * response
+     * does not contain a version number
      * @throws IOException                if an I/O error occurs
      * @throws ProtocolStateException     if the command is not allowed at the current protocol state
      * @throws ProtocolFormatException    if the received package is not of the format "CCC L… B…", CCC = three
      *                                    character command, L… = length of body, B… = body with length L…
      * @throws ProtocolExecutionException if the server answered with an error message
      */
-    public Map<String, String> ayt() throws IOException, ProtocolStateException, ProtocolFormatException,
+    public String ayt() throws IOException, ProtocolStateException, ProtocolFormatException,
             ProtocolExecutionException {
         OutgoingMessage outgoingMessage = new OutgoingMessage(StateMachine.ClientRequestCommand.AYT);
         byte[] body = sendReceive(outgoingMessage);
 
         Map<String, String> parameters = parseBody(body);
-        if (!parameters.containsKey("version")) {
-            return Collections.emptyMap();
-        }
-
-        return Collections.singletonMap("version", parameters.get("version"));
+        return parameters.getOrDefault("version", "");
     }
 
     /**
@@ -132,10 +129,8 @@ public class ClientProtocol {
         OutgoingMessage outgoingMessage = new OutgoingMessage(StateMachine.ClientRequestCommand.GCO);
         byte[] body = sendReceive(outgoingMessage);
         Map<String, String> parameters = parseBody(body);
-        Set<String> result = new HashSet<>(parameters.size());
-        result.addAll(parameters.entrySet().stream().filter(each -> each.getKey().matches("connector[0-9]+"))
-                .map(Map.Entry::getValue).collect(Collectors.toList()));
-        return result;
+        return parameters.entrySet().stream().filter(each -> each.getKey().matches("connector[0-9]+"))
+                .map(Map.Entry::getValue).collect(Collectors.toSet());
     }
 
     /**
@@ -167,8 +162,8 @@ public class ClientProtocol {
      */
     public void sco(String connector) throws IOException, ProtocolStateException, ProtocolFormatException,
             ProtocolExecutionException {
-        OutgoingMessage outgoingMessage =
-                new OutgoingMessage(StateMachine.ClientRequestCommand.SCO, "connector=" + connector);
+        OutgoingMessage outgoingMessage = new OutgoingMessage(StateMachine.ClientRequestCommand.SCO,
+                Collections.singletonMap("connector", connector));
         sendReceive(outgoingMessage);
     }
 
@@ -186,8 +181,8 @@ public class ClientProtocol {
      */
     public Map<String, String> tco(byte... data) throws IOException, ProtocolStateException, ProtocolFormatException,
             ProtocolExecutionException {
-        OutgoingMessage outgoingMessage =
-                new OutgoingMessage(StateMachine.ClientRequestCommand.TCO, "data=" + Hex.byte2HexBin(data));
+        OutgoingMessage outgoingMessage = new OutgoingMessage(StateMachine.ClientRequestCommand.TCO,
+                Collections.singletonMap("data", Hex.byte2HexBin(data)));
         byte[] body = sendReceive(outgoingMessage);
         return parseBody(body);
     }
@@ -204,8 +199,8 @@ public class ClientProtocol {
      */
     public void swa(String watcher) throws IOException, ProtocolStateException, ProtocolFormatException,
             ProtocolExecutionException {
-        OutgoingMessage outgoingMessage =
-                new OutgoingMessage(StateMachine.ClientRequestCommand.SWA, "watcher=" + watcher);
+        OutgoingMessage outgoingMessage = new OutgoingMessage(StateMachine.ClientRequestCommand.SWA,
+                Collections.singletonMap("watcher", watcher));
         sendReceive(outgoingMessage);
     }
 
@@ -263,8 +258,8 @@ public class ClientProtocol {
      */
     public Map<String, String> twa(byte... data) throws IOException, ProtocolStateException, ProtocolFormatException,
             ProtocolExecutionException {
-        OutgoingMessage outgoingMessage =
-                new OutgoingMessage(StateMachine.ClientRequestCommand.TWA, "data=" + Hex.byte2HexBin(data));
+        OutgoingMessage outgoingMessage = new OutgoingMessage(StateMachine.ClientRequestCommand.TWA,
+                Collections.singletonMap("data", Hex.byte2HexBin(data)));
         byte[] body = sendReceive(outgoingMessage);
         return parseBody(body);
     }
@@ -283,8 +278,8 @@ public class ClientProtocol {
      */
     public Map<String, String> fuz(byte... data) throws IOException, ProtocolStateException, ProtocolFormatException,
             ProtocolExecutionException {
-        OutgoingMessage outgoingMessage =
-                new OutgoingMessage(StateMachine.ClientRequestCommand.FUZ, "data=" + Hex.byte2HexBin(data));
+        OutgoingMessage outgoingMessage = new OutgoingMessage(StateMachine.ClientRequestCommand.FUZ,
+                Collections.singletonMap("data", Hex.byte2HexBin(data)));
         byte[] body = sendReceive(outgoingMessage);
         return parseBody(body);
     }

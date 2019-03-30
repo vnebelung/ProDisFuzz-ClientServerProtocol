@@ -1,6 +1,6 @@
 /*
- * This file is part of ProDisFuzz, modified on 15.07.18 22:20.
- * Copyright (c) 2013-2018 Volker Nebelung <vnebelung@prodisfuzz.net>
+ * This file is part of ProDisFuzz, modified on 3/24/19 11:00 AM.
+ * Copyright (c) 2013-2019 Volker Nebelung <vnebelung@prodisfuzz.net>
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
  * as published by Sam Hocevar. See the COPYING file for more details.
@@ -11,7 +11,6 @@ package net.prodisfuzz.csp.internal.packet.client;
 import net.prodisfuzz.csp.internal.message.client.IncomingMessage;
 import net.prodisfuzz.csp.internal.packet.ProtocolFormatException;
 import net.prodisfuzz.csp.internal.protocol.StateMachine;
-import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -19,6 +18,9 @@ import support.StreamSimulator;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.fail;
 
 public class PacketParserTest {
 
@@ -44,10 +46,10 @@ public class PacketParserTest {
             try {
                 incomingMessage = packetParser.readIncomingMessage();
             } catch (ProtocolFormatException e) {
-                Assert.fail();
+                fail();
             }
-            Assert.assertEquals(incomingMessage.getCommand(), each);
-            Assert.assertEquals(incomingMessage.getBody(), "key=value".getBytes(StandardCharsets.UTF_8));
+            assertEquals(incomingMessage.getCommand(), each);
+            assertEquals(incomingMessage.getBody(), "key=value".getBytes(StandardCharsets.UTF_8));
         }
 
         String[] wrong =
@@ -58,7 +60,7 @@ public class PacketParserTest {
             streamSimulator.writeForInputStream(each);
             try {
                 packetParser.readIncomingMessage();
-                Assert.fail();
+                fail();
             } catch (ProtocolFormatException ignored) {
             }
         }
